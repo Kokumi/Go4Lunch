@@ -31,7 +31,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
                 break;
             case 1: bF= RestaurantListFragment.newInstance();
                 break;
-            case 2:bF = ColleagueListFragment.newInstance();
+            case 2: bF = ColleagueListFragment.newInstance();
                 break;
             default: bF= RestaurantMapFragment.newInstance();
                 break;
@@ -42,6 +42,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 }
