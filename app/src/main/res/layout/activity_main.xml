@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,4 +13,19 @@
         android:layout_height="wrap_content"
         android:text="Login"/>
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/main_testbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test IT"
+        android:layout_marginTop="50dp"
+        />
+
+    <TextView
+        android:id="@+id/main_testText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:text="not connected"/>
+
+</RelativeLayout>
