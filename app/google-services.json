@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "789680033211-pcn8tt52om16klq9bgm2g287jhelrjhc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.debruyckere.florian.go4lunch",
+            "certificate_hash": "a7407b81403d3f5c1bd0f9cc879b80ef8964f5e3"
+          }
+        },
+        {
+          "client_id": "789680033211-f9qcrhhve9hhhnpj9hmcj6c96lggpkbi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.debruyckere.florian.go4lunch",
+            "certificate_hash": "a7407b81403d3f5c1bd0f9cc879b80efb964f5e3"
+          }
+        },
+        {
           "client_id": "789680033211-i3deqd3qsqbgc9of31okcbn14ol36am6.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +45,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "789680033211-ajb3pksp61tmj8q9aqmdk1dhg7snckoc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
