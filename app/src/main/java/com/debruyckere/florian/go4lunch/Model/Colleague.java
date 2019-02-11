@@ -7,23 +7,28 @@ import android.media.Image;
  */
 public class Colleague {
 
-    private int id;
+    private String id;
     private String mName;
     private String mSurname;
     private Image mPicture;
 
-    public Colleague(int id, String name, String surname, Image picture) {
+    public Colleague(String id, String name, String surname, Image picture) {
         this.id = id;
         this.mName = name;
         this.mSurname = surname;
         this.mPicture = picture;
     }
+    public Colleague(String id, String name, String surname){
+        this.id = id;
+        this.mName = name;
+        this.mSurname = surname;
+    }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -15,19 +15,19 @@ import com.debruyckere.florian.go4lunch.R;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,14 +35,16 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
     private FirebaseAuth mAuth;
 
-    private Button mLoginButton;
-    private Button mTestButton;
-    private TextView mText;
+    @BindView(R.id.main_login_button)Button mLoginButton ;
+    @BindView(R.id.main_testbutton)Button mTestButton;
+    @BindView(R.id.main_testText)TextView mText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ButterKnife.bind(this);
 
         mAuth=FirebaseAuth.getInstance();
 
@@ -50,11 +52,47 @@ public class MainActivity extends AppCompatActivity {
         mTestButton = findViewById(R.id.main_testbutton);
         mText = findViewById(R.id.main_testText);
 
-        onClickLoginButton();
+
+
+        onClickParameter();
+
     }
 
+    public void task(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final ArrayList<Colleague> toReturn=new ArrayList<>();
+        OnCompleteListener<QuerySnapshot> listener = new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document :task.getResult()){
+                        Colleague colleague = new Colleague(document.getId()
+                                ,(String) document.getData().get("name")
+                                ,(String) document.getData().get("surname"));
 
-    public void onClickLoginButton(){
+                        toReturn.add(colleague);
+                    }
+                }else{
+                    Log.w("Database error : ",task.getException());
+                }
+                Log.v("Database answer",toReturn.get(0).getName() + " " +toReturn.get(0).getSurname());
+            }
+        };
+
+        FireBaseConnector FBC = new FireBaseConnector();
+        FBC.getColleague(listener);
+
+        //TODO: onClompleteListener paramêtre en appel de la méthode!
+    }
+
+    @OnClick(R.id.main_login_button)
+    public void setLoginButton(){
+        startSignInActivity();
+    }
+
+    FireBaseConnector mFBC=new FireBaseConnector();
+
+    public void onClickParameter(){
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,13 +104,7 @@ public class MainActivity extends AppCompatActivity {
         mTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FireBaseConnector fBC = new FireBaseConnector(getBaseContext());
-                ArrayList<Colleague> toTest = fBC.getColleagues();
-                try {
-                    Log.i("TEST CONNECTOR", "Colleague1 " + toTest.get(0).getName());
-                }catch (IllegalStateException e){
-                    Log.e("TEST ERROR",e.getMessage());
-                }
+                task();
             }
         });
     }
@@ -86,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                         .setAvailableProviders(
                                 Arrays.asList(
                                         new AuthUI.IdpConfig.GoogleBuilder().build() // SUPPORT GOOGLE
-                                        //,new AuthUI.IdpConfig.EmailBuilder().build()
                                 ))
                         .setIsSmartLockEnabled(true)
                         .build(),
