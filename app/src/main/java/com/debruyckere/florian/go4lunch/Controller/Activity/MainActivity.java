@@ -11,23 +11,27 @@ import android.widget.TextView;
 
 import com.debruyckere.florian.go4lunch.Model.Colleague;
 import com.debruyckere.florian.go4lunch.Model.FireBaseConnector;
+import com.debruyckere.florian.go4lunch.Model.Restaurant;
+import com.debruyckere.florian.go4lunch.Model.Wish;
 import com.debruyckere.florian.go4lunch.R;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,7 +63,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void task(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FireBaseConnector FBC = new FireBaseConnector();
+
+        OnSuccessListener<DocumentReference> sucessLi = new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Log.i("FirebaseConnector","Wish Added");
+            }
+        };
+
+        OnFailureListener failLi = new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("FirebaseConnector","Fail");
+                e.printStackTrace();
+            }
+        };
+        Colleague me = new Colleague("sYleg2zzfVrkXygyMXvN" ,"Test","Bertrand");
+        Restaurant restaurant = new Restaurant(1,"12 Pierre du feu");
+        Wish myWish = new Wish(Calendar.getInstance().getTime(),me,restaurant);
+
+        FBC.addWish(sucessLi,failLi,myWish);
+
+    }
+
+    public void getTask(){
         final ArrayList<Colleague> toReturn=new ArrayList<>();
         OnCompleteListener<QuerySnapshot> listener = new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -81,16 +109,9 @@ public class MainActivity extends AppCompatActivity {
 
         FireBaseConnector FBC = new FireBaseConnector();
         FBC.getColleague(listener);
-
-        //TODO: onClompleteListener paramêtre en appel de la méthode!
     }
 
-    @OnClick(R.id.main_login_button)
-    public void setLoginButton(){
-        startSignInActivity();
-    }
 
-    FireBaseConnector mFBC=new FireBaseConnector();
 
     public void onClickParameter(){
 

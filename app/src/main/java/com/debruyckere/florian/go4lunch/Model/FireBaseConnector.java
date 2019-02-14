@@ -1,19 +1,15 @@
 package com.debruyckere.florian.go4lunch.Model;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -23,10 +19,46 @@ public class FireBaseConnector {
 
     public void getColleague(OnCompleteListener pListener){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final ArrayList<Colleague> toReturn=new ArrayList<>();
 
         db.collection("Colleague")
                 .get()
                 .addOnCompleteListener(pListener);
     }
+
+    public void addWish(OnSuccessListener<DocumentReference> pSuccessListener, OnFailureListener pFailListener, Wish pWish){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String,Object> wish = new HashMap<>();
+        wish.put("colleagueId",pWish.getColleague().getId());
+        wish.put("date", Calendar.getInstance().getTime());
+        wish.put("restaurantAdresse",pWish.getRestaurant().getAdresse());
+
+        db.collection("Wish")
+                .add(wish)
+                .addOnSuccessListener(pSuccessListener)
+                .addOnFailureListener(pFailListener);
+    }
+
+    /*
+    // Create a new user with a first and last name
+Map<String, Object> user = new HashMap<>();
+user.put("first", "Ada");
+user.put("last", "Lovelace");
+user.put("born", 1815);
+
+// Add a new document with a generated ID
+db.collection("users")
+        .add(user)
+        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error adding document", e);
+            }
+        });
+     */
 }
