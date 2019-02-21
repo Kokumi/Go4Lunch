@@ -1,1 +1,2 @@
 include ':app'
+include 'com.google.android.libraries.places:1.0.0'

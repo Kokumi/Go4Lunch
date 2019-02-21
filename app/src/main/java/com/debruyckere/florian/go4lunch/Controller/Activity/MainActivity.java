@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.main_login_button)Button mLoginButton ;
     @BindView(R.id.main_testbutton)Button mTestButton;
     @BindView(R.id.main_testText)TextView mText;
+    @BindView(R.id.main_outbutton)Button mOutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         mLoginButton = findViewById(R.id.main_login_button);
         mTestButton = findViewById(R.id.main_testbutton);
         mText = findViewById(R.id.main_testText);
+        mOutButton = findViewById(R.id.main_outbutton);
 
 
 
@@ -128,6 +130,13 @@ public class MainActivity extends AppCompatActivity {
                 task();
             }
         });
+
+        mOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextScreen();
+            }
+        });
     }
 
 
@@ -171,5 +180,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
-        }
     }
+
+    private void nextScreen(){
+        Intent intent = new Intent(this,appActivity.class);
+        startActivity(intent);
+    }
+}

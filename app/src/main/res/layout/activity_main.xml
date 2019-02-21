@@ -21,6 +21,14 @@
         android:layout_marginTop="50dp"
         />
 
+    <Button
+        android:id="@+id/main_outbutton"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="next screen"
+        />
+
     <TextView
         android:id="@+id/main_testText"
         android:layout_width="wrap_content"
