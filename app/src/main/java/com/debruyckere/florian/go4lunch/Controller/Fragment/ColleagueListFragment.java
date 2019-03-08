@@ -19,7 +19,7 @@ public class ColleagueListFragment extends BaseFragment {
      *
      * @return A new instance of fragment ColleagueListFragment.
      */
-    // TODO: Rename and change types and number of parameters
+
     public static ColleagueListFragment newInstance() {
         return new ColleagueListFragment();
     }
