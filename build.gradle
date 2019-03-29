@@ -23,6 +23,9 @@ allprojects {
         maven {url 'https://maven.google.com' }
     }
 }
+configurations.all{
+    exclude group: 'com.google.android.libraries.places', module: 'places'
+}
 
 task clean(type: Delete) {
     delete rootProject.buildDir

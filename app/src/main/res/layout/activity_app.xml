@@ -3,12 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Controller.Activity.appActivity">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/app_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        />
+
+    <android.support.design.widget.TabLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/app_tablayout"
+        android:layout_alignParentBottom="true"
+        android:background="#222222"
+        app:tabTextColor="#FFFFFF"
+        app:tabSelectedTextColor="#888888"
         />
 
 </RelativeLayout>

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.debruyckere.florian.go4lunch.R;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -22,11 +23,22 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.PlaceLikelihood;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FetchPlaceResponse;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
+import java.util.Arrays;
+import java.util.List;
 
 
 public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCallback {
@@ -98,9 +110,6 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
         updateLocationUI();
 
         getDeviceLocation();
-        /*LatLng point = new LatLng(37,25);
-        mMap.addMarker(new MarkerOptions().position(point).title("Marker in Nowhere"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(point));*/
 
     }
 
@@ -168,7 +177,7 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
                             mMap.moveCamera(CameraUpdateFactory.newLatLng(
                                     new LatLng(mLastKnowLocation.getLatitude(),mLastKnowLocation.getLongitude())
                                     ));
-                            mMap.setMinZoomPreference(14f);
+                            mMap.setMinZoomPreference(16f);
                         }else {
                             Log.e("TASKERROR",task.getException().getMessage());
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -179,5 +188,44 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
         }catch (SecurityException e){
             e.printStackTrace();
         }
+
+        getPlaces();
+    }
+
+    public void getPlaces(){
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID,Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.TYPES);
+
+        FindCurrentPlaceRequest currentRequest = FindCurrentPlaceRequest.builder(placeFields).build();
+
+        if(ContextCompat.checkSelfPermission(mContext,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED) {
+            final Task<FindCurrentPlaceResponse> placeResponse = mPlacesClient.findCurrentPlace(currentRequest);
+
+            placeResponse.addOnSuccessListener(new OnSuccessListener<FindCurrentPlaceResponse>() {
+                @Override
+                public void onSuccess(FindCurrentPlaceResponse findCurrentPlaceResponse) {
+                    for(PlaceLikelihood placeLikelihood : findCurrentPlaceResponse.getPlaceLikelihoods()){
+                        if(placeLikelihood.getPlace().getTypes().contains("RESTAURANT")) {
+                            Log.i("Map","add marker for: "+placeLikelihood.getPlace().getName());
+                            mMap.addMarker(new MarkerOptions().position(placeLikelihood.getPlace().getLatLng())
+                                    .title(placeLikelihood.getPlace().getName() + " " + placeLikelihood.getPlace().getTypes()));
+                        }
+
+                        /*Log.i("PlaceCurrent","place has likelihood: %f"+placeLikelihood.getPlace().getName()
+                                +" "+placeLikelihood.getLikelihood());*/
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("PlaceCurrent","error: "+e.getMessage());
+                }
+            });
+        }
+        else{
+            Log.e("PlaceCurrent","Permission Denied");
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 package com.debruyckere.florian.go4lunch.Controller.Activity;
 
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,5 +23,10 @@ public class appActivity extends AppCompatActivity{
 
         pager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
 
+        TabLayout tabs=findViewById(R.id.app_tablayout);
+
+        tabs.setupWithViewPager(pager);
+
+        tabs.setTabMode(TabLayout.MODE_FIXED);
     }
 }

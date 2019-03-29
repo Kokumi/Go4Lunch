@@ -44,4 +44,22 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return 3;
     }
+
+    @Override
+    public CharSequence getPageTitle(int position){
+        CharSequence title;
+
+        switch (position){
+            default:title="Default Title";
+            break;
+            case 0:title="Map View";
+            break;
+            case 1:title="List View";
+            break;
+            case 2:title="Workmates";
+                break;
+        }
+
+        return title;
+    }
 }
