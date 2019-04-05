@@ -2,14 +2,29 @@ package com.debruyckere.florian.go4lunch.Controller.Fragment;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.debruyckere.florian.go4lunch.Model.Colleague;
+import com.debruyckere.florian.go4lunch.Model.ColleagueAdapter;
+import com.debruyckere.florian.go4lunch.Model.FireBaseConnector;
 import com.debruyckere.florian.go4lunch.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 
 public class ColleagueListFragment extends BaseFragment {
+
+    private RecyclerView mRecyclerView;
 
     public ColleagueListFragment() { }
 
@@ -32,6 +47,37 @@ public class ColleagueListFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_colleague_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_colleague_list, container, false);
+
+        new FireBaseConnector().getColleague(getCompleteListener());
+
+        mRecyclerView = view.findViewById(R.id.colleague_recycler);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+
+
+        return view;
+    }
+
+    public OnCompleteListener getCompleteListener(){
+        OnCompleteListener<QuerySnapshot> listener = new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    ArrayList<Colleague> mData = new ArrayList<>();
+                    for(QueryDocumentSnapshot document :task.getResult()){
+                        Colleague colleague = new Colleague(document.getId()
+                                ,(String) document.getData().get("name")
+                                ,(String) document.getData().get("surname"));
+
+                        mData.add(colleague);
+                        mRecyclerView.setAdapter(new ColleagueAdapter(mData));
+                    }
+                }else{
+                    Log.w("Database error : ",task.getException());
+                }
+            }
+        };
+
+        return listener;
     }
 }

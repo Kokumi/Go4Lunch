@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class FireBaseConnector {
         Map<String,Object> wish = new HashMap<>();
         wish.put("colleagueId",pWish.getColleague().getId());
         wish.put("date", Calendar.getInstance().getTime());
-        wish.put("restaurantAdresse",pWish.getRestaurant().getAdresse());
+        wish.put("restaurantAdresse",pWish.getRestaurant().getAddress());
 
         db.collection("Wish")
                 .add(wish)
@@ -61,4 +62,21 @@ db.collection("users")
             }
         });
      */
+
+    public ArrayList<Colleague> getColleaguesTest(){
+        ArrayList<Colleague> result = new ArrayList<>();
+
+        result.add(new Colleague("1","Pilica","Gusto"));
+
+        return result;
+    }
+
+    public ArrayList<Restaurant> getRestaurantsData(){
+        ArrayList<Restaurant> result = new ArrayList<>();
+
+        result.add(new Restaurant(10,"Le point","12 Leclerc Mouvaux","Français","11h30 - 14H",1));
+
+        return result;
+    }
+
 }

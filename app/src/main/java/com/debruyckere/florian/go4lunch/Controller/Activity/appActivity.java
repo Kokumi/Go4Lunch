@@ -29,4 +29,7 @@ public class appActivity extends AppCompatActivity{
 
         tabs.setTabMode(TabLayout.MODE_FIXED);
     }
+    //<activity
+    //            android:name=".Controller.Activity.MapsActivity"
+    //            android:label="@string/title_activity_maps"></activity>
 }

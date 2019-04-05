@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="80dp"
+
+    android:id="@+id/restaurant_cell">
+
+    <TextView
+        android:id="@+id/restaurant_cell_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="name"/>
+
+    <TextView
+        android:id="@+id/restaurant_cell_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_alignTop="@id/restaurant_cell_colleague"
+        android:text="type - address"/>
+
+    <TextView
+        android:id="@+id/restaurant_cell_open"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="5dp"
+        android:layout_alignTop="@id/restaurant_cell_star1"
+        android:text="open"/>
+
+    <TextView
+        android:id="@+id/restaurant_cell_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/restaurant_cell_image"
+        android:layout_marginTop="5dp"
+        android:text="distance"/>
+
+    <TextView
+        android:id="@+id/restaurant_cell_colleague"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/restaurant_cell_image"
+        android:layout_below="@id/restaurant_cell_distance"
+        android:text="Guy-2"/>
+
+    <ImageView
+        android:id="@+id/restaurant_cell_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:layout_alignParentEnd="true"
+        android:src="@android:drawable/ic_menu_edit"/>
+
+    <ImageView
+        android:id="@+id/restaurant_cell_star1"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@android:drawable/ic_lock_lock"
+        android:layout_toStartOf="@id/restaurant_cell_image"
+        android:layout_below="@id/restaurant_cell_colleague"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/restaurant_cell_star2"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/restaurant_cell_colleague"
+        android:layout_toStartOf="@id/restaurant_cell_star1"
+        android:src="@android:drawable/ic_lock_lock"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/restaurant_cell_star3"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/restaurant_cell_colleague"
+        android:layout_toStartOf="@id/restaurant_cell_star2"
+        android:src="@android:drawable/ic_lock_lock"
+        android:visibility="invisible"/>
+
+</RelativeLayout>
