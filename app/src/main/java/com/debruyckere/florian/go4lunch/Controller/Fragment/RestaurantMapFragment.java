@@ -206,7 +206,7 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
                 @Override
                 public void onSuccess(FindCurrentPlaceResponse findCurrentPlaceResponse) {
                     for(PlaceLikelihood placeLikelihood : findCurrentPlaceResponse.getPlaceLikelihoods()){
-                        if(placeLikelihood.getPlace().getTypes().contains("RESTAURANT")) {
+                        if(placeLikelihood.getPlace().getTypes().toString().contains("RESTAURANT")) {
                             Log.i("Map","add marker for: "+placeLikelihood.getPlace().getName());
                             mMap.addMarker(new MarkerOptions().position(placeLikelihood.getPlace().getLatLng())
                                     .title(placeLikelihood.getPlace().getName() + " " + placeLikelihood.getPlace().getTypes()));

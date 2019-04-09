@@ -7,7 +7,7 @@ import android.media.Image;
  */
 public class Restaurant {
 
-    private int id;
+    private String id;
     private String name;
 
 
@@ -18,12 +18,12 @@ public class Restaurant {
     private Integer rate;
     //private image image;
 
-    public Restaurant(int id, String address) {
+    public Restaurant(String id, String address) {
         this.id = id;
         this.address = address;
     }
 
-    public Restaurant(int id, String name, String address, String type, String open, Integer rate) {
+    public Restaurant(String id, String name, String address, String type, String open, Integer rate) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -32,11 +32,11 @@ public class Restaurant {
         this.rate = rate;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         Colleague me = new Colleague("sYleg2zzfVrkXygyMXvN" ,"Test","Bertrand");
-        Restaurant restaurant = new Restaurant(1,"12 Pierre du feu");
+        Restaurant restaurant = new Restaurant("1","12 Pierre du feu");
         Wish myWish = new Wish(Calendar.getInstance().getTime(),me,restaurant);
 
         FBC.addWish(sucessLi,failLi,myWish);

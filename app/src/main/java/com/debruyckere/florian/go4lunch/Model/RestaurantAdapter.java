@@ -19,9 +19,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
 
     private ArrayList<Restaurant> data ;
 
-    public RestaurantAdapter(){
-        data = new FireBaseConnector().getRestaurantsData();
-
+    public RestaurantAdapter(ArrayList<Restaurant> pData){
+        data = pData;
     }
 
     @NonNull
