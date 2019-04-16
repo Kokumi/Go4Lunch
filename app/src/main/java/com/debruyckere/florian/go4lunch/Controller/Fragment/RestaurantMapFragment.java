@@ -209,7 +209,7 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
                         if(placeLikelihood.getPlace().getTypes().toString().contains("RESTAURANT")) {
                             Log.i("Map","add marker for: "+placeLikelihood.getPlace().getName());
                             mMap.addMarker(new MarkerOptions().position(placeLikelihood.getPlace().getLatLng())
-                                    .title(placeLikelihood.getPlace().getName() + " " + placeLikelihood.getPlace().getTypes()));
+                                    .title(placeLikelihood.getPlace().getName() + " " + placeLikelihood.getPlace().getTypes().get(0)));
                         }
 
                         /*Log.i("PlaceCurrent","place has likelihood: %f"+placeLikelihood.getPlace().getName()

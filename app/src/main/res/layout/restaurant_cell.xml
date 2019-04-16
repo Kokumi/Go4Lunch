@@ -80,4 +80,22 @@
         android:src="@android:drawable/ic_lock_lock"
         android:visibility="invisible"/>
 
+    <ImageView
+        android:id="@+id/restaurant_cell_star4"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/restaurant_cell_colleague"
+        android:layout_toStartOf="@id/restaurant_cell_star3"
+        android:src="@android:drawable/ic_lock_lock"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/restaurant_cell_star5"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/restaurant_cell_colleague"
+        android:layout_toStartOf="@id/restaurant_cell_star4"
+        android:src="@android:drawable/ic_lock_lock"
+        android:visibility="invisible"/>
+
 </RelativeLayout>

@@ -1,16 +1,21 @@
 package com.debruyckere.florian.go4lunch.Model;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.FetchPhotoResponse;
@@ -58,6 +63,23 @@ public class FireBaseConnector {
                 .addOnFailureListener(pFailListener);
     }
 
+    public void getWish(OnCompleteListener pListener){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Wish")
+                .get()
+                .addOnCompleteListener(pListener);
+    }
+
+    public void getUserLocation(Context pContext, OnCompleteListener pListener){
+        FusedLocationProviderClient FusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(pContext);
+
+        if(ContextCompat.checkSelfPermission(pContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            FusedLocationProviderClient.getLastLocation().addOnCompleteListener(pListener);
+        }
+    }
+
     /*
     // Create a new user with a first and last name
 Map<String, Object> user = new HashMap<>();
@@ -82,18 +104,32 @@ db.collection("users")
         });
      */
 
-    public void getRestaurantsData(OnSuccessListener pListener, Context pContext){
+    public void getRestaurantsData(OnCompleteListener pListener, Context pContext){
         PlacesClient client = Places.createClient(pContext);
 
-        final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID,Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.TYPES);
+        final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID,Place.Field.NAME,Place.Field.LAT_LNG,
+                Place.Field.TYPES,Place.Field.RATING,Place.Field.PHOTO_METADATAS,Place.Field.ADDRESS/*,Place.Field.OPENING_HOURS*/);
         FindCurrentPlaceRequest currentRequest = FindCurrentPlaceRequest.builder(placeFields).build();
 
         if(ContextCompat.checkSelfPermission(pContext,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED) {
             final Task<FindCurrentPlaceResponse> placeResponse = client.findCurrentPlace(currentRequest);
-            placeResponse.addOnSuccessListener(pListener);
+            placeResponse.addOnCompleteListener(pListener);
         }
+    }
+
+    public void getRestaurantPhoto(OnSuccessListener pListener, Context pContext, Place pPlaces){
+        PlacesClient client = Places.createClient(pContext);
+
+        PhotoMetadata photoMetadata = pPlaces.getPhotoMetadatas().get(0);
+
+        FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                .setMaxWidth(50)
+                .setMaxHeight(30)
+                .build();
+
+        client.fetchPhoto(photoRequest).addOnSuccessListener(pListener);
     }
 
 }

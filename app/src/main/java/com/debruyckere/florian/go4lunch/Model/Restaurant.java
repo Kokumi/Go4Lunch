@@ -1,5 +1,6 @@
 package com.debruyckere.florian.go4lunch.Model;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 
 /**
@@ -9,14 +10,12 @@ public class Restaurant {
 
     private String id;
     private String name;
-
-
-
     private String address;
     private String type;
     private String open;
     private Integer rate;
-    //private image image;
+    private Bitmap image;
+    private int distance;
 
     public Restaurant(String id, String address) {
         this.id = id;
@@ -78,5 +77,21 @@ public class Restaurant {
 
     public void setRate(Integer rate) {
         this.rate = rate;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
     }
 }

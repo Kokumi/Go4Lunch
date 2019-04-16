@@ -168,7 +168,9 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode == RC_SIGN_IN){
             if(resultCode == RESULT_OK){
-                mText.setText("Welcome "+mAuth.getCurrentUser().getEmail());
+                //mText.setText("Welcome "+mAuth.getCurrentUser().getEmail());
+                Intent intent = new Intent(this,appActivity.class);
+                startActivity(intent);
             }
         } else { // ERRORS
             if (response == null) {
