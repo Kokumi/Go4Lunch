@@ -1,9 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Controller.Activity.DetailRestaurantActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/detail_image"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@color/colorPrimary" />
+
+    <RelativeLayout
+        android:id="@+id/detail_second_layout"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_below="@+id/detail_image"
+        android:background="#FF5722">
+
+        <TextView
+            android:id="@+id/detail_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_toStartOf="@+id/detail_validation_button"
+            android:text="@string/detail_title"
+            android:textSize="20sp"
+            android:textColor="#fff"/>
+
+        <TextView
+            android:id="@+id/detail_typeaddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_below="@+id/detail_title"
+            android:text="@string/detail_type_address"
+            android:textColor="#fff"/>
+
+        <ImageButton
+            android:id="@+id/detail_validation_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/common_full_open_on_phone"
+            android:contentDescription="@string/detail_description_validation_button"/>
+
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/detail_call"
+        android:layout_width="133dp"
+        android:layout_height="75dp"
+        android:layout_below="@+id/detail_second_layout"
+        android:src="@drawable/fui_ic_phone_white_24dp"
+        android:contentDescription="@string/detail_description_call"/>
+
+    <ImageButton
+        android:id="@+id/detail_like"
+        android:layout_width="133dp"
+        android:layout_height="75dp"
+        android:layout_below="@id/detail_second_layout"
+        android:layout_toEndOf="@+id/detail_call"
+        android:src="@drawable/quantum_ic_arrow_back_grey600_24"
+        android:contentDescription="@string/detail_description_like"/>
+
+    <ImageButton
+        android:id="@+id/detail_website"
+        android:layout_width="134dp"
+        android:layout_height="75dp"
+        android:layout_below="@id/detail_second_layout"
+        android:layout_toEndOf="@id/detail_like"
+        android:src="@drawable/quantum_ic_cloud_off_vd_theme_24"
+        android:contentDescription="@string/detail_description_website"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/detail_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/detail_call">
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

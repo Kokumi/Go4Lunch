@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="60dp"
 
     android:id="@+id/restaurant_cell">
 
     <TextView
         android:id="@+id/restaurant_cell_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:text="name"/>
+        android:layout_toStartOf="@+id/restaurant_cell_distance"
+        android:text="@string/restaurant_cell_name"/>
 
     <TextView
         android:id="@+id/restaurant_cell_address"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@id/restaurant_cell_colleague"
         android:layout_alignTop="@id/restaurant_cell_colleague"
-        android:text="type - address"/>
+        android:text="@string/restaurant_cell_type_address"/>
 
     <TextView
         android:id="@+id/restaurant_cell_open"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_marginStart="5dp"
         android:layout_alignTop="@id/restaurant_cell_star1"
-        android:text="open"/>
+        android:text="@string/restaurant_cell_open"/>
 
     <TextView
         android:id="@+id/restaurant_cell_distance"
@@ -35,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_toStartOf="@id/restaurant_cell_image"
         android:layout_marginTop="5dp"
-        android:text="distance"/>
+        android:text="@string/restaurant_cell_distance"/>
 
     <TextView
         android:id="@+id/restaurant_cell_colleague"
@@ -43,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_toStartOf="@id/restaurant_cell_image"
         android:layout_below="@id/restaurant_cell_distance"
-        android:text="Guy-2"/>
+        android:text="@string/restaurant_cell_colleague"/>
 
     <ImageView
         android:id="@+id/restaurant_cell_image"
@@ -51,7 +53,8 @@
         android:layout_height="50dp"
         android:layout_margin="10dp"
         android:layout_alignParentEnd="true"
-        android:src="@android:drawable/ic_menu_edit"/>
+        android:src="@android:drawable/ic_menu_edit"
+        android:contentDescription="@string/restaurant_cell_description_image"/>
 
     <ImageView
         android:id="@+id/restaurant_cell_star1"
@@ -60,7 +63,8 @@
         android:src="@android:drawable/ic_lock_lock"
         android:layout_toStartOf="@id/restaurant_cell_image"
         android:layout_below="@id/restaurant_cell_colleague"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:contentDescription="@string/restaurant_cell_description_rate"/>
 
     <ImageView
         android:id="@+id/restaurant_cell_star2"
@@ -69,7 +73,8 @@
         android:layout_below="@id/restaurant_cell_colleague"
         android:layout_toStartOf="@id/restaurant_cell_star1"
         android:src="@android:drawable/ic_lock_lock"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:contentDescription="@string/restaurant_cell_description_rate"/>
 
     <ImageView
         android:id="@+id/restaurant_cell_star3"
@@ -78,7 +83,8 @@
         android:layout_below="@id/restaurant_cell_colleague"
         android:layout_toStartOf="@id/restaurant_cell_star2"
         android:src="@android:drawable/ic_lock_lock"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:contentDescription="@string/restaurant_cell_description_rate"/>
 
     <ImageView
         android:id="@+id/restaurant_cell_star4"
@@ -87,7 +93,8 @@
         android:layout_below="@id/restaurant_cell_colleague"
         android:layout_toStartOf="@id/restaurant_cell_star3"
         android:src="@android:drawable/ic_lock_lock"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:contentDescription="@string/restaurant_cell_description_rate"/>
 
     <ImageView
         android:id="@+id/restaurant_cell_star5"
@@ -96,6 +103,7 @@
         android:layout_below="@id/restaurant_cell_colleague"
         android:layout_toStartOf="@id/restaurant_cell_star4"
         android:src="@android:drawable/ic_lock_lock"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:contentDescription="@string/restaurant_cell_description_rate"/>
 
 </RelativeLayout>

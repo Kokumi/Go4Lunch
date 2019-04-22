@@ -1,5 +1,6 @@
 package com.debruyckere.florian.go4lunch.Model;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,12 +13,17 @@ import android.widget.TextView;
 import com.debruyckere.florian.go4lunch.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.android.libraries.places.api.model.AddressComponents;
+import com.google.android.libraries.places.api.model.DayOfWeek;
+import com.google.android.libraries.places.api.model.OpeningHours;
+import com.google.android.libraries.places.api.model.Period;
+import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by Debruyckère Florian on 02/01/2019.
@@ -25,9 +31,11 @@ import java.util.Calendar;
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.MyViewHolder> {
 
     private ArrayList<Restaurant> data ;
+    private Context mContext;
 
-    public RestaurantAdapter(ArrayList<Restaurant> pData){
+    public RestaurantAdapter(ArrayList<Restaurant> pData,Context pContext){
         data = pData;
+        mContext = pContext;
     }
 
     @NonNull
@@ -51,6 +59,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
         return data.size();
     }
 
+    private Restaurant mRestaurant;
+    private FireBaseConnector mFireBase = new FireBaseConnector();
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
@@ -80,12 +90,15 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
             });
         }
         private void display(Restaurant pRest){
+            mRestaurant = pRest;
             mName.setText(pRest.getName());
-            mTypeAddress.setText(new StringBuilder(pRest.getType()+" - "+pRest.getAddress()));
-            mOpen.setText(pRest.getOpen());
+            //mTypeAddress.setText(new StringBuilder(pRest.getType()+" - "+pRest.getAddress()));
+            //mOpen.setText(pRest.getOpen());
             mDistance.setText(new StringBuilder(pRest.getDistance()+" m"));
-            new FireBaseConnector().getWish(getWishListener(pRest));
             mRestaurantImage.setImageBitmap(pRest.getImage());
+
+            mFireBase.getWish(getWishListener(pRest));
+            mFireBase.getRestaurantData(getPlaceCompleteListener(),mContext,pRest.getId());
 
             switch(pRest.getRate()){
                 case 1:mStar1.setVisibility(View.VISIBLE);
@@ -116,7 +129,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
             return new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if(task.isSuccessful()){
+                    if(task.isSuccessful() && task.getResult() != null){
                         int nbWish = 0;
                         for(QueryDocumentSnapshot document :task.getResult()){
                             if(document.getData().get("restaurantAdresse") == pRest.getAddress() &&
@@ -129,8 +142,50 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
                         mColleague.setText(new StringBuilder(nbWish+ " Wish"));
 
                     }else{
-                        Log.e("RETAURANT WISH LISTENER",task.getException().toString());
+                        if(task.getException() != null)
+                        Log.e("WISH LISTENER",task.getException().toString());
                     }
+                }
+            };
+        }
+
+        private OnCompleteListener<FetchPlaceResponse> getPlaceCompleteListener(){
+
+            return new OnCompleteListener<FetchPlaceResponse>() {
+                @Override
+                public void onComplete(@NonNull Task<FetchPlaceResponse> task) {
+                    if(task.isSuccessful() && task.getResult()!= null){
+                        if(task.getResult().getPlace().getOpeningHours() != null) {
+
+                            OpeningHours oH = task.getResult().getPlace().getOpeningHours();
+                            //Log.i("oH Weekday",oH.getWeekdayText().get(0));
+
+                            for(Period p : oH.getPeriods()){
+                                if(p.getClose()!=null &&
+                                   p.getClose().getDay().ordinal() == Calendar.getInstance().get(Calendar.DAY_OF_WEEK)-1){
+                                    mRestaurant.setOpen(p.getClose().getTime().getHours()+"H "+p.getClose().getTime().getMinutes());
+                                }
+                            }
+
+                            mOpen.setText(mRestaurant.getOpen());
+                        }
+
+                        AddressComponents aC = task.getResult().getPlace().getAddressComponents();
+
+                        if(aC != null)
+                        mRestaurant.setAddress(aC.asList().get(0).getName()+" "+aC.asList().get(1).getName());
+
+                        mTypeAddress.setText(new StringBuilder(mRestaurant.getType()+" - "+mRestaurant.getAddress()));
+                    }else {
+                        if(task.getException()!=null)
+                        Log.e("COMPLETE PLACE LIST",task.getException().toString());
+                    }
+
+                    if(task.getResult().getPlace().getPhoneNumber()!=null)
+                        mRestaurant.setPhoneNumber(task.getResult().getPlace().getPhoneNumber());
+                    if(task.getResult().getPlace().getWebsiteUri()!= null)
+                        mRestaurant.setWebUri(task.getResult().getPlace().getWebsiteUri());
+
                 }
             };
         }

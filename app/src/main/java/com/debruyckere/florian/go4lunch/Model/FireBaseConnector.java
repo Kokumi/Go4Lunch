@@ -4,8 +4,6 @@ package com.debruyckere.florian.go4lunch.Model;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -18,18 +16,13 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
-import com.google.android.libraries.places.api.net.FetchPhotoResponse;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.FetchPlaceResponse;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -117,6 +110,16 @@ db.collection("users")
             final Task<FindCurrentPlaceResponse> placeResponse = client.findCurrentPlace(currentRequest);
             placeResponse.addOnCompleteListener(pListener);
         }
+    }
+
+    public void getRestaurantData(OnCompleteListener pListener, Context pContext,String pId){
+        PlacesClient client = Places.createClient(pContext);
+
+        final List<Place.Field> placesFields= Arrays.asList(Place.Field.OPENING_HOURS, Place.Field.PHONE_NUMBER,
+                Place.Field.WEBSITE_URI,Place.Field.ADDRESS_COMPONENTS);
+        FetchPlaceRequest request = FetchPlaceRequest.builder(pId,placesFields).build();
+
+        client.fetchPlace(request).addOnCompleteListener(pListener);
     }
 
     public void getRestaurantPhoto(OnSuccessListener pListener, Context pContext, Place pPlaces){

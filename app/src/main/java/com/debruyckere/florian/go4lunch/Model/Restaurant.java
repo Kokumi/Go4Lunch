@@ -2,6 +2,9 @@ package com.debruyckere.florian.go4lunch.Model;
 
 import android.graphics.Bitmap;
 import android.media.Image;
+import android.net.Uri;
+
+import java.net.URL;
 
 /**
  * Created by Debruyckère Florian on 02/01/2019.
@@ -16,6 +19,8 @@ public class Restaurant {
     private Integer rate;
     private Bitmap image;
     private int distance;
+    private String phoneNumber;
+    private Uri webUri;
 
     public Restaurant(String id, String address) {
         this.id = id;
@@ -93,5 +98,21 @@ public class Restaurant {
 
     public void setImage(Bitmap image) {
         this.image = image;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Uri getWebUri() {
+        return webUri;
+    }
+
+    public void setWebUri(Uri webUrl) {
+        this.webUri = webUrl;
     }
 }

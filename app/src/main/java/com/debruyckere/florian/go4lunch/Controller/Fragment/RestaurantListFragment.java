@@ -41,13 +41,13 @@ public class RestaurantListFragment extends BaseFragment {
      * @return A new instance of fragment RestaurantListFragment.
      */
     public static RestaurantListFragment newInstance() {
-        RestaurantListFragment fragment = new RestaurantListFragment();
-        return fragment;
+        return new RestaurantListFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getActivity() != null)
         mContext = getActivity().getApplicationContext();
     }
 
@@ -75,8 +75,11 @@ public class RestaurantListFragment extends BaseFragment {
             public void onComplete(@NonNull Task<FindCurrentPlaceResponse> task) {
                 if(task.isSuccessful()) {
                     ArrayList<Restaurant> data = new ArrayList<>();
+                    if(task.getResult() != null)
                     for(PlaceLikelihood placeLikelihood : task.getResult().getPlaceLikelihoods()){
-                        if(placeLikelihood.getPlace().getTypes().toString().contains("RESTAURANT")) {
+                        if(placeLikelihood.getPlace().getTypes()!= null &&
+                                placeLikelihood.getPlace().getTypes().toString().contains("RESTAURANT")) {
+
                             int rate;
                             if(placeLikelihood.getPlace().getUserRatingsTotal() != null){           //to avoid nullPointerException
                                 rate = Math.round(placeLikelihood.getPlace().getUserRatingsTotal());
@@ -88,14 +91,15 @@ public class RestaurantListFragment extends BaseFragment {
                                     placeLikelihood.getPlace().getName(),
                                     placeLikelihood.getPlace().getAddress(),
                                     placeLikelihood.getPlace().getTypes().get(0).toString(),
-                                    "12H - 18H",
-                                    //placeLikelihood.getPlace().getOpeningHours().toString(),
+                                    "24H/24",
                                     rate
                             );
 
                             Location restaurantLocation = new Location("Restaurant");
-                            restaurantLocation.setLatitude(placeLikelihood.getPlace().getLatLng().latitude);
-                            restaurantLocation.setLongitude(placeLikelihood.getPlace().getLatLng().longitude);
+                            if(placeLikelihood.getPlace().getLatLng()!= null) {
+                                restaurantLocation.setLatitude(placeLikelihood.getPlace().getLatLng().latitude);
+                                restaurantLocation.setLongitude(placeLikelihood.getPlace().getLatLng().longitude);
+                            }
 
                             restaurant.setDistance(Math.round(mUserLocation.distanceTo(restaurantLocation)));
 
@@ -109,14 +113,15 @@ public class RestaurantListFragment extends BaseFragment {
                             data.add(restaurant);
                         }
                     }
-                    mRecycler.setAdapter(new RestaurantAdapter(data));
+                    mRecycler.setAdapter(new RestaurantAdapter(data,mContext));
                 }
                 else{
+                    if(task.getException()!=null)
                     Log.e("List Listener",task.getException().toString());
                 }
                 }
             };
-        };
+        }
 
     public OnCompleteListener getDistanceListener(){
         return  new OnCompleteListener<Location>() {
