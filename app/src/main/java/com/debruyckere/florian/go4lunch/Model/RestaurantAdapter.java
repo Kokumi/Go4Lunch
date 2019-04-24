@@ -1,6 +1,7 @@
 package com.debruyckere.florian.go4lunch.Model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,11 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.debruyckere.florian.go4lunch.Controller.Activity.DetailRestaurantActivity;
 import com.debruyckere.florian.go4lunch.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.AddressComponents;
-import com.google.android.libraries.places.api.model.DayOfWeek;
 import com.google.android.libraries.places.api.model.OpeningHours;
 import com.google.android.libraries.places.api.model.Period;
 import com.google.android.libraries.places.api.net.FetchPlaceResponse;
@@ -23,7 +24,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
 
 /**
  * Created by Debruyckère Florian on 02/01/2019.
@@ -86,6 +86,9 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
                 @Override
                 public void onClick(View view){
                     //TODO: when click go to detail
+                    Intent intent = new Intent(mContext, DetailRestaurantActivity.class);
+                    intent.putExtra("RESTAURANTDATA",mRestaurant.getId());
+                    mContext.startActivity(intent);
                 }
             });
         }
@@ -161,7 +164,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
                             //Log.i("oH Weekday",oH.getWeekdayText().get(0));
 
                             for(Period p : oH.getPeriods()){
-                                if(p.getClose()!=null &&
+                                if(p.getClose()!=null && p.getClose().getTime().getHours() <= 19 &&
                                    p.getClose().getDay().ordinal() == Calendar.getInstance().get(Calendar.DAY_OF_WEEK)-1){
                                     mRestaurant.setOpen(p.getClose().getTime().getHours()+"H "+p.getClose().getTime().getMinutes());
                                 }
@@ -176,15 +179,15 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
                         mRestaurant.setAddress(aC.asList().get(0).getName()+" "+aC.asList().get(1).getName());
 
                         mTypeAddress.setText(new StringBuilder(mRestaurant.getType()+" - "+mRestaurant.getAddress()));
+
+                        /*
+                        */
                     }else {
                         if(task.getException()!=null)
                         Log.e("COMPLETE PLACE LIST",task.getException().toString());
                     }
 
-                    if(task.getResult().getPlace().getPhoneNumber()!=null)
-                        mRestaurant.setPhoneNumber(task.getResult().getPlace().getPhoneNumber());
-                    if(task.getResult().getPlace().getWebsiteUri()!= null)
-                        mRestaurant.setWebUri(task.getResult().getPlace().getWebsiteUri());
+
 
                 }
             };

@@ -115,8 +115,9 @@ db.collection("users")
     public void getRestaurantData(OnCompleteListener pListener, Context pContext,String pId){
         PlacesClient client = Places.createClient(pContext);
 
-        final List<Place.Field> placesFields= Arrays.asList(Place.Field.OPENING_HOURS, Place.Field.PHONE_NUMBER,
-                Place.Field.WEBSITE_URI,Place.Field.ADDRESS_COMPONENTS);
+        final List<Place.Field> placesFields= Arrays.asList(Place.Field.NAME,Place.Field.LAT_LNG,
+                Place.Field.TYPES,Place.Field.RATING,Place.Field.PHOTO_METADATAS,Place.Field.OPENING_HOURS,
+                Place.Field.ADDRESS_COMPONENTS);
         FetchPlaceRequest request = FetchPlaceRequest.builder(pId,placesFields).build();
 
         client.fetchPlace(request).addOnCompleteListener(pListener);
@@ -135,4 +136,4 @@ db.collection("users")
         client.fetchPhoto(photoRequest).addOnSuccessListener(pListener);
     }
 
-}
+}//Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI,

@@ -81,4 +81,10 @@
         android:layout_below="@+id/detail_call">
     </android.support.v7.widget.RecyclerView>
 
+    <ProgressBar
+        android:id="@+id/detail_progress"
+        android:layout_width="300dp"
+        android:layout_height="500dp"
+        android:layout_centerInParent="true"/>
+
 </RelativeLayout>
