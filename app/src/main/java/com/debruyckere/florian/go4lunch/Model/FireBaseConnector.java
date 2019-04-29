@@ -16,12 +16,17 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
+import com.google.android.libraries.places.api.net.FetchPhotoResponse;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -39,6 +44,13 @@ public class FireBaseConnector {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("Colleague")
+                .get()
+                .addOnCompleteListener(pListener);
+    }
+    public void getColleagueById(OnCompleteListener<DocumentSnapshot> pListener, String pId){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Colleague").document(pId)
                 .get()
                 .addOnCompleteListener(pListener);
     }
@@ -60,6 +72,15 @@ public class FireBaseConnector {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("Wish")
+                .get()
+                .addOnCompleteListener(pListener);
+    }
+
+    public void getWishByAddress(OnCompleteListener<QuerySnapshot> pListener, String pAddress){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Wish")
+                .whereEqualTo("restaurantAdresse",pAddress)
                 .get()
                 .addOnCompleteListener(pListener);
     }
@@ -123,17 +144,16 @@ db.collection("users")
         client.fetchPlace(request).addOnCompleteListener(pListener);
     }
 
-    public void getRestaurantPhoto(OnSuccessListener pListener, Context pContext, Place pPlaces){
+    public void getRestaurantPhoto(OnCompleteListener<FetchPhotoResponse> pListener, Context pContext, Place pPlaces){
         PlacesClient client = Places.createClient(pContext);
 
         PhotoMetadata photoMetadata = pPlaces.getPhotoMetadatas().get(0);
+        //String attribution = photoMetadata.getAttributions();
 
         FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
-                .setMaxWidth(50)
-                .setMaxHeight(30)
                 .build();
 
-        client.fetchPhoto(photoRequest).addOnSuccessListener(pListener);
+        client.fetchPhoto(photoRequest).addOnCompleteListener(pListener);
     }
 
-}//Place.Field.PHONE_NUMBER, Place.Field.WEBSITE_URI,
+}

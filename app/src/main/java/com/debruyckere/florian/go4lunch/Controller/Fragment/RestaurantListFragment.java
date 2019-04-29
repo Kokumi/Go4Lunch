@@ -73,13 +73,15 @@ public class RestaurantListFragment extends BaseFragment {
         return new OnCompleteListener<FindCurrentPlaceResponse>(){
             @Override
             public void onComplete(@NonNull Task<FindCurrentPlaceResponse> task) {
-                if(task.isSuccessful()) {
+                if(task.isSuccessful() && task.getResult() != null) {
                     ArrayList<Restaurant> data = new ArrayList<>();
-                    if(task.getResult() != null)
+
                     for(PlaceLikelihood placeLikelihood : task.getResult().getPlaceLikelihoods()){
                         if(placeLikelihood.getPlace().getTypes()!= null &&
                                 placeLikelihood.getPlace().getTypes().toString().contains("RESTAURANT")) {
 
+                            //----------------------------
+                            //Get restaurant rate from Api
                             int rate;
                             if(placeLikelihood.getPlace().getUserRatingsTotal() != null){           //to avoid nullPointerException
                                 rate = Math.round(placeLikelihood.getPlace().getUserRatingsTotal());
@@ -95,6 +97,8 @@ public class RestaurantListFragment extends BaseFragment {
                                     rate
                             );
 
+                            //-----------------------------------
+                            //Get Distance between restaurant and user
                             Location restaurantLocation = new Location("Restaurant");
                             if(placeLikelihood.getPlace().getLatLng()!= null) {
                                 restaurantLocation.setLatitude(placeLikelihood.getPlace().getLatLng().latitude);
@@ -103,16 +107,20 @@ public class RestaurantListFragment extends BaseFragment {
 
                             restaurant.setDistance(Math.round(mUserLocation.distanceTo(restaurantLocation)));
 
-                            new FireBaseConnector().getRestaurantPhoto(new OnSuccessListener<FetchPhotoResponse>() {
+                            //-------------------
+                            //Get Restaurant Image
+                            /*new FireBaseConnector().getRestaurantPhoto(new OnSuccessListener<FetchPhotoResponse>() {
                                 @Override
                                 public void onSuccess(FetchPhotoResponse fetchPhotoResponse) {
                                     restaurant.setImage( fetchPhotoResponse.getBitmap());
                                 }
-                            },mContext,placeLikelihood.getPlace());
+                            },mContext,placeLikelihood.getPlace());*/
 
                             data.add(restaurant);
                         }
                     }
+                    //---------------------
+                    //Set Adapter with Data
                     mRecycler.setAdapter(new RestaurantAdapter(data,mContext));
                 }
                 else{

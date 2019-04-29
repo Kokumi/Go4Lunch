@@ -31,8 +31,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -75,6 +73,7 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if(getActivity() != null)
         mContext = getActivity().getApplicationContext();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
     }
@@ -119,6 +118,7 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
         } else {
+            if(getActivity()!= null)
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
@@ -172,13 +172,14 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
                 locationResult.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
-                        if(task.isSuccessful()){
+                        if(task.isSuccessful() && task.getResult() != null){
                             mLastKnowLocation = (Location) task.getResult();
                             mMap.moveCamera(CameraUpdateFactory.newLatLng(
                                     new LatLng(mLastKnowLocation.getLatitude(),mLastKnowLocation.getLongitude())
                                     ));
                             mMap.setMinZoomPreference(16f);
                         }else {
+                            if(task.getException() != null)
                             Log.e("TASKERROR",task.getException().getMessage());
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
@@ -206,7 +207,10 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
                 @Override
                 public void onSuccess(FindCurrentPlaceResponse findCurrentPlaceResponse) {
                     for(PlaceLikelihood placeLikelihood : findCurrentPlaceResponse.getPlaceLikelihoods()){
-                        if(placeLikelihood.getPlace().getTypes().toString().contains("RESTAURANT")) {
+                        if(placeLikelihood.getPlace().getTypes() != null
+                                && placeLikelihood.getPlace().getTypes().toString().contains("RESTAURANT")
+                                && placeLikelihood.getPlace().getLatLng() != null) {
+
                             Log.i("Map","add marker for: "+placeLikelihood.getPlace().getName());
                             mMap.addMarker(new MarkerOptions().position(placeLikelihood.getPlace().getLatLng())
                                     .title(placeLikelihood.getPlace().getName() + " " + placeLikelihood.getPlace().getTypes().get(0)));

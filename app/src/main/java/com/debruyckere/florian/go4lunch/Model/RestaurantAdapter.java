@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.debruyckere.florian.go4lunch.Controller.Activity.DetailRestaurantActivity;
@@ -18,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.AddressComponents;
 import com.google.android.libraries.places.api.model.OpeningHours;
 import com.google.android.libraries.places.api.model.Period;
+import com.google.android.libraries.places.api.net.FetchPhotoResponse;
 import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -59,13 +61,16 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
         return data.size();
     }
 
-    private Restaurant mRestaurant;
-    private FireBaseConnector mFireBase = new FireBaseConnector();
+
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
+        private FireBaseConnector mFireBase = new FireBaseConnector();
+        private Restaurant mRestaurant;
         private TextView mName,mTypeAddress,mOpen,mDistance,mColleague;
         private ImageView mRestaurantImage,mStar1,mStar2,mStar3,mStar4,mStar5;
+        private ProgressBar mProgressBar;
 
         private MyViewHolder(View itemView) {
             super(itemView);
@@ -81,11 +86,11 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
             mStar3= itemView.findViewById(R.id.restaurant_cell_star3);
             mStar4= itemView.findViewById(R.id.restaurant_cell_star4);
             mStar5= itemView.findViewById(R.id.restaurant_cell_star5);
+            mProgressBar = itemView.findViewById(R.id.restaurant_cell_progress);
 
             itemView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view){
-                    //TODO: when click go to detail
                     Intent intent = new Intent(mContext, DetailRestaurantActivity.class);
                     intent.putExtra("RESTAURANTDATA",mRestaurant.getId());
                     mContext.startActivity(intent);
@@ -95,10 +100,9 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
         private void display(Restaurant pRest){
             mRestaurant = pRest;
             mName.setText(pRest.getName());
-            //mTypeAddress.setText(new StringBuilder(pRest.getType()+" - "+pRest.getAddress()));
-            //mOpen.setText(pRest.getOpen());
             mDistance.setText(new StringBuilder(pRest.getDistance()+" m"));
-            mRestaurantImage.setImageBitmap(pRest.getImage());
+            //mRestaurantImage.setImageBitmap(pRest.getImage());
+
 
             mFireBase.getWish(getWishListener(pRest));
             mFireBase.getRestaurantData(getPlaceCompleteListener(),mContext,pRest.getId());
@@ -137,7 +141,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
                         for(QueryDocumentSnapshot document :task.getResult()){
                             if(document.getData().get("restaurantAdresse") == pRest.getAddress() &&
                             document.getData().get("date") == Calendar.getInstance().getTime()){
-
                                 nbWish++;
 
                             }
@@ -180,15 +183,23 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
 
                         mTypeAddress.setText(new StringBuilder(mRestaurant.getType()+" - "+mRestaurant.getAddress()));
 
-                        /*
-                        */
+                        mFireBase.getRestaurantPhoto(getPhotoListener(),mContext,task.getResult().getPlace());
                     }else {
                         if(task.getException()!=null)
                         Log.e("COMPLETE PLACE LIST",task.getException().toString());
                     }
+                }
+            };
+        }
 
-
-
+        private OnCompleteListener<FetchPhotoResponse> getPhotoListener(){
+            return new OnCompleteListener<FetchPhotoResponse>(){
+                @Override
+                public void onComplete(@NonNull Task<FetchPhotoResponse> task) {
+                    if(task.isSuccessful() && task.getResult()!= null){
+                        mRestaurantImage.setImageBitmap(task.getResult().getBitmap());
+                    }
+                    mProgressBar.setVisibility(View.GONE);
                 }
             };
         }
