@@ -1,5 +1,6 @@
 package com.debruyckere.florian.go4lunch.Model;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,10 +12,13 @@ import android.widget.TextView;
 import com.debruyckere.florian.go4lunch.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.net.FetchPlaceResponse;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by Debruyckère Florian on 02/01/2019.
@@ -22,31 +26,11 @@ import java.util.ArrayList;
 public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.ColleagueViewHolder> {
 
     private ArrayList<Colleague> mData;
+    private Context mContext;
 
-    public OnCompleteListener getCompleteListener(){
-        OnCompleteListener<QuerySnapshot> listener = new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot document :task.getResult()){
-                        Colleague colleague = new Colleague(document.getId()
-                                ,(String) document.getData().get("name")
-                                ,(String) document.getData().get("surname"));
-
-                        mData.add(colleague);
-                    }
-                }else{
-                    Log.w("Database error : ",task.getException());
-                }
-            }
-        };
-
-        return listener;
-    }
-
-    public ColleagueAdapter(ArrayList<Colleague> pData){
-        //new FireBaseConnector().getColleague(getCompleteListener());
+    public ColleagueAdapter(ArrayList<Colleague> pData, Context pContext){
         mData = pData;
+        mContext = pContext;
     }
 
     @NonNull
@@ -80,6 +64,33 @@ public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.Coll
 
         private void display(Colleague param){
             mTextView.setText(new StringBuilder(param.getName()+" "+ param.getSurname()));
+
+            new FireBaseConnector().GetWishOfColleague(RestaurantListener(),param.getId());
         }
+
+        public OnCompleteListener<QuerySnapshot> RestaurantListener(){
+            return new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if( task.getResult() != null){
+                        for(DocumentSnapshot document : task.getResult()){
+                            if(document.get("date") == Calendar.getInstance().getTime() && document.get("RestaurantId") != null){
+
+                                new FireBaseConnector().getRestaurantData(new OnCompleteListener<FetchPlaceResponse>(){
+                                    @Override
+                                    public void onComplete(@NonNull Task<FetchPlaceResponse> task) {
+                                        if(task.getResult() != null){
+                                            mTextView.setText(new StringBuilder(mTextView.getText()+ " want go to " + task.getResult().getPlace().getName()));
+                                        }
+                                    }
+                                },mContext,document.get("RestaurantId").toString());
+
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
     }
 }

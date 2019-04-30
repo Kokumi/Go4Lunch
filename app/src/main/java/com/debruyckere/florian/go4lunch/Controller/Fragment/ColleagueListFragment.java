@@ -1,6 +1,7 @@
 package com.debruyckere.florian.go4lunch.Controller.Fragment;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 public class ColleagueListFragment extends BaseFragment {
 
     private RecyclerView mRecyclerView;
+    private Context mContext;
 
     public ColleagueListFragment() { }
 
@@ -49,20 +51,23 @@ public class ColleagueListFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_colleague_list, container, false);
 
+        if(getActivity() != null)
+            mContext = getActivity().getApplicationContext();
+
         new FireBaseConnector().getColleague(getCompleteListener());
 
         mRecyclerView = view.findViewById(R.id.colleague_recycler);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
 
         return view;
     }
 
     public OnCompleteListener getCompleteListener(){
-        OnCompleteListener<QuerySnapshot> listener = new OnCompleteListener<QuerySnapshot>() {
+        return new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
+                if(task.getResult() != null){
                     ArrayList<Colleague> mData = new ArrayList<>();
                     for(QueryDocumentSnapshot document :task.getResult()){
                         Colleague colleague = new Colleague(document.getId()
@@ -70,14 +75,12 @@ public class ColleagueListFragment extends BaseFragment {
                                 ,(String) document.getData().get("surname"));
 
                         mData.add(colleague);
-                        mRecyclerView.setAdapter(new ColleagueAdapter(mData));
+                        mRecyclerView.setAdapter(new ColleagueAdapter(mData, mContext));
                     }
                 }else{
                     Log.w("Database error : ",task.getException());
                 }
             }
         };
-
-        return listener;
     }
 }

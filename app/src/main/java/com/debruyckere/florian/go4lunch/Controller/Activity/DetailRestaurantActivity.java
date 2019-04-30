@@ -71,28 +71,28 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         mValidationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //TODO: ADD WISH with user-ID
             }
         });
 
         mCallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //Maybe
             }
         });
 
         mLikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //TODO: Search how consider a like with API
             }
         });
 
         mWebsiteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //TODO: ADD a opener to site
             }
         });
     }
@@ -130,6 +130,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                             new FireBaseConnector().getRestaurantPhoto(getPhotoListener(),getApplicationContext(),task.getResult().getPlace());
 
                             display();
+                            getColleagueData();
                         }else {
                             if(task.getException()!= null)
                                 Log.e("DETAIL_TASK",task.getException().getMessage());

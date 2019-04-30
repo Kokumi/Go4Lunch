@@ -107,15 +107,6 @@ public class RestaurantListFragment extends BaseFragment {
 
                             restaurant.setDistance(Math.round(mUserLocation.distanceTo(restaurantLocation)));
 
-                            //-------------------
-                            //Get Restaurant Image
-                            /*new FireBaseConnector().getRestaurantPhoto(new OnSuccessListener<FetchPhotoResponse>() {
-                                @Override
-                                public void onSuccess(FetchPhotoResponse fetchPhotoResponse) {
-                                    restaurant.setImage( fetchPhotoResponse.getBitmap());
-                                }
-                            },mContext,placeLikelihood.getPlace());*/
-
                             data.add(restaurant);
                         }
                     }
@@ -141,20 +132,4 @@ public class RestaurantListFragment extends BaseFragment {
             }
         };
     }
-    }
-
-/*
-
-public double getDistance(LatLng LatLng1, LatLng LatLng2) {
-    double distance = 0;
-    Location locationA = new Location("A");
-    locationA.setLatitude(LatLng1.latitude);
-    locationA.setLongitude(LatLng1.longitude);
-    Location locationB = new Location("B");
-    locationB.setLatitude(LatLng2.latitude);
-    locationB.setLongitude(LatLng2.longitude);
-    distance = locationA.distanceTo(locationB);
-
-    return distance;
 }
- */

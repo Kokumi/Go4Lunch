@@ -76,6 +76,15 @@ public class FireBaseConnector {
                 .addOnCompleteListener(pListener);
     }
 
+    public void GetWishOfColleague(OnCompleteListener<QuerySnapshot> pListener, String pId){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Wish")
+                .whereEqualTo("colleagueId",pId)
+                .get()
+                .addOnCompleteListener(pListener);
+    }
+
     public void getWishByAddress(OnCompleteListener<QuerySnapshot> pListener, String pAddress){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
