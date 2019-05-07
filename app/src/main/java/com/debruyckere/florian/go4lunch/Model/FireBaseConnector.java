@@ -55,7 +55,7 @@ public class FireBaseConnector {
                 .addOnCompleteListener(pListener);
     }
 
-    public void addWish(OnSuccessListener<DocumentReference> pSuccessListener, OnFailureListener pFailListener, Wish pWish){
+    public void addWish(OnSuccessListener<DocumentReference> pCompleteListener, OnFailureListener pFailListener, Wish pWish){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String,Object> wish = new HashMap<>();
         wish.put("colleagueId",pWish.getColleague().getId());
@@ -64,8 +64,20 @@ public class FireBaseConnector {
 
         db.collection("Wish")
                 .add(wish)
-                .addOnSuccessListener(pSuccessListener)
+                .addOnSuccessListener(pCompleteListener)
                 .addOnFailureListener(pFailListener);
+    }
+
+    public void addLike(OnCompleteListener<DocumentReference> pSuccessListener,String pColleagueId, String pRestaurantId){
+        FirebaseFirestore db =FirebaseFirestore.getInstance();
+
+        Map<String,String> like = new HashMap<>();
+        like.put("colleagueId",pColleagueId);
+        like.put("restaurantId",pRestaurantId);
+
+        db.collection("Like")
+                .add(like)
+                .addOnCompleteListener(pSuccessListener);
     }
 
     public void getWish(OnCompleteListener pListener){
@@ -109,6 +121,9 @@ Map<String, Object> user = new HashMap<>();
 user.put("first", "Ada");
 user.put("last", "Lovelace");
 user.put("born", 1815);
+
+AIzaSyDJpAjCos0SYzU_rwPOKHtVOZzVkLXAquc
+
 
 // Add a new document with a generated ID
 db.collection("users")

@@ -1,6 +1,7 @@
 package com.debruyckere.florian.go4lunch.Controller.Activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,22 +9,30 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.debruyckere.florian.go4lunch.Model.Colleague;
 import com.debruyckere.florian.go4lunch.Model.DetailRestaurantAdapter;
 import com.debruyckere.florian.go4lunch.Model.FireBaseConnector;
 import com.debruyckere.florian.go4lunch.Model.Restaurant;
+import com.debruyckere.florian.go4lunch.Model.Wish;
 import com.debruyckere.florian.go4lunch.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.AddressComponents;
 import com.google.android.libraries.places.api.model.Period;
 import com.google.android.libraries.places.api.net.FetchPhotoResponse;
 import com.google.android.libraries.places.api.net.FetchPlaceResponse;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -39,6 +48,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private Restaurant mRestaurant;
     private ProgressBar mProgressBar;
+    private WebView mWebView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +64,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         mWebsiteButton = findViewById(R.id.detail_website);
         mRecyclerView = findViewById(R.id.detail_recycler);
         mProgressBar = findViewById(R.id.detail_progress);
+        mWebView = findViewById(R.id.detail_webview);
 
         Intent intent = getIntent();
         String restaurantId = intent.getStringExtra("RESTAURANTDATA");
@@ -71,28 +82,63 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         mValidationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: ADD WISH with user-ID
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                if(currentUser != null) {
+                    Colleague user = new Colleague(currentUser.getUid(), currentUser.getDisplayName(), "");
+                    Wish wish = new Wish(Calendar.getInstance().getTime(), user, mRestaurant);
+                    Log.i("WISH ADD", "date: " + wish.getDate().toString() + " for "
+                            + wish.getColleague().getName() + " " + wish.getColleague().getSurname() + " to " + wish.getRestaurant().getName());
+
+                    new FireBaseConnector().addWish(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.i("ADD WISH", "Add wish Succeed");
+                        }
+                    }, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.i("ADD WISH", "Failure " + e.getMessage());
+                        }
+                    }, wish);
+                }
             }
         });
 
         mCallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Maybe
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:"+mRestaurant.getPhoneNumber()));
+                //startActivity(callIntent);
             }
         });
 
         mLikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: Search how consider a like with API
+                if(FirebaseAuth.getInstance().getCurrentUser() != null)
+                new FireBaseConnector().addLike(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        mLikeButton.setImageAlpha(R.drawable.quantum_ic_clear_grey600_24);
+                    }
+                },FirebaseAuth.getInstance().getCurrentUser().getUid()
+                ,mRestaurant.getId());
+
             }
         });
 
         mWebsiteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: ADD a opener to site
+                /*Intent browserIntent = new Intent(Intent.ACTION_VIEW, mRestaurant.getWebUri());
+                startActivity(browserIntent);*/
+                if(mRestaurant.getWebUri() != null) {
+                    mWebView.loadUrl(mRestaurant.getWebUri().toString());
+                    mWebView.setVisibility(View.VISIBLE);
+                } else {
+                    Toast.makeText(getApplicationContext(),"No website.",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -190,7 +236,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
 
                         data.add(colleague);
                         }
-                        RecyclerParamater(data);
+                        RecyclerParameter(data);
                 }else{
                     if (task.getException() != null)
                         Log.e("Error","task Error"+ task.getException().toString());
@@ -202,7 +248,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         };
     }
 
-    private void RecyclerParamater(ArrayList<Colleague> pData){
+    private void RecyclerParameter(ArrayList<Colleague> pData){
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(new DetailRestaurantAdapter(pData));
     }
