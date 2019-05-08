@@ -72,7 +72,8 @@ public class ColleagueListFragment extends BaseFragment {
                     for(QueryDocumentSnapshot document :task.getResult()){
                         Colleague colleague = new Colleague(document.getId()
                                 ,(String) document.getData().get("name")
-                                ,(String) document.getData().get("surname"));
+                                ,(String) document.getData().get("surname")
+                                ,(String) document.getData().get("photo"));
 
                         mData.add(colleague);
                         mRecyclerView.setAdapter(new ColleagueAdapter(mData, mContext));

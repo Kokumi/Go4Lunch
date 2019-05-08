@@ -80,11 +80,12 @@ public class FireBaseConnector {
                 .addOnCompleteListener(pCompleteListener);
     }
 
-    public void registerColleague(OnCompleteListener<Void> pCompleteListener, String pName, String pId){
+    public void registerColleague(OnCompleteListener<Void> pCompleteListener, String pName, String pId, String pPhotoUri){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Map<String,String> colleagueMap = new HashMap<>();
         colleagueMap.put("name",pName);
+        colleagueMap.put("photo",pPhotoUri);
 
         db.collection("Colleague").document(pId)
                 .set(colleagueMap)

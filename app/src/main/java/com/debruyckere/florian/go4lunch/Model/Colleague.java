@@ -10,13 +10,13 @@ public class Colleague {
     private String id;
     private String mName;
     private String mSurname;
-    private Image mPicture;
+    private String mPictureUrl;
 
-    public Colleague(String id, String name, String surname, Image picture) {
+    public Colleague(String id, String name, String surname, String picture) {
         this.id = id;
         this.mName = name;
         this.mSurname = surname;
-        this.mPicture = picture;
+        this.mPictureUrl = picture;
     }
     public Colleague(String id, String name, String surname){
         this.id = id;
@@ -48,11 +48,11 @@ public class Colleague {
         this.mSurname = surname;
     }
 
-    public Image getPicture() {
-        return mPicture;
+    public String getPicture() {
+        return mPictureUrl;
     }
 
-    public void setPicture(Image picture) {
-        this.mPicture = picture;
+    public void setPicture(String picture) {
+        this.mPictureUrl = picture;
     }
 }

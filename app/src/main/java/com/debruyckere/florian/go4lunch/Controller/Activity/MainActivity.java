@@ -181,7 +181,8 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                         },mAuth.getCurrentUser().getDisplayName()
-                        ,mAuth.getCurrentUser().getUid());
+                        ,mAuth.getCurrentUser().getUid()
+                        ,mAuth.getCurrentUser().getPhotoUrl().toString());
                     }
                 }else{
                     Log.w("Database error : ",task.getException());
