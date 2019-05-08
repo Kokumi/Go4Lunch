@@ -63,7 +63,10 @@ public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.Coll
         }
 
         private void display(Colleague param){
+            if(param.getSurname() != null)
             mTextView.setText(new StringBuilder(param.getName()+" "+ param.getSurname()));
+
+            else mTextView.setText(new StringBuilder(param.getName()));
 
             new FireBaseConnector().GetWishOfColleague(RestaurantListener(),param.getId());
         }

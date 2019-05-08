@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.debruyckere.florian.go4lunch.Model.Colleague;
 import com.debruyckere.florian.go4lunch.Model.FireBaseConnector;
@@ -26,7 +27,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -89,32 +89,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void getTask(){
-        final ArrayList<Colleague> toReturn=new ArrayList<>();
-        OnCompleteListener<QuerySnapshot> listener = new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot document :task.getResult()){
-                        Colleague colleague = new Colleague(document.getId()
-                                ,(String) document.getData().get("name")
-                                ,(String) document.getData().get("surname"));
-
-                        toReturn.add(colleague);
-                    }
-                }else{
-                    Log.w("Database error : ",task.getException());
-                }
-                Log.v("Database answer",toReturn.get(0).getName() + " " +toReturn.get(0).getSurname());
-            }
-        };
-
-        FireBaseConnector FBC = new FireBaseConnector();
-        FBC.getColleague(listener);
-    }
-
-
-
     public void onClickParameter(){
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
@@ -169,19 +143,54 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == RC_SIGN_IN){
             if(resultCode == RESULT_OK){
                 //mText.setText("Welcome "+mAuth.getCurrentUser().getEmail());
+                signUpFirebase();
+
                 Intent intent = new Intent(this,appActivity.class);
                 startActivity(intent);
             }
         } else { // ERRORS
             if (response == null) {
-                mText.setText("canceled");
+                Toast.makeText(this,"Sign in Canceled", Toast.LENGTH_SHORT).show();
             } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
-                mText.setText("no network");
+                Toast.makeText(getApplicationContext(),"No network, verify your Connection", Toast.LENGTH_SHORT).show();
             } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                mText.setText("Unknow Bug");
+                Toast.makeText(getApplicationContext(),"Unfortunately, a unknown error has Arrived", Toast.LENGTH_SHORT).show();
 
             }
         }
+    }
+
+    public void signUpFirebase(){
+        OnCompleteListener<QuerySnapshot> listener = new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful() & task.getResult ()!= null & mAuth.getCurrentUser() != null){
+                    Boolean alreadySignIn = false;
+                    for(QueryDocumentSnapshot document :task.getResult()){
+
+                        if(mAuth.getCurrentUser().getUid().equals(document.getId()))
+                            alreadySignIn = true;
+
+                    }
+                    if(!alreadySignIn){
+                        new FireBaseConnector().registerColleague(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    Toast.makeText(getApplicationContext(),"Welcome new user", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        },mAuth.getCurrentUser().getDisplayName()
+                        ,mAuth.getCurrentUser().getUid());
+                    }
+                }else{
+                    Log.w("Database error : ",task.getException());
+                }
+            }
+        };
+
+        FireBaseConnector FBC = new FireBaseConnector();
+        FBC.getColleague(listener);
     }
 
     private void nextScreen(){

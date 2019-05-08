@@ -68,7 +68,7 @@ public class FireBaseConnector {
                 .addOnFailureListener(pFailListener);
     }
 
-    public void addLike(OnCompleteListener<DocumentReference> pSuccessListener,String pColleagueId, String pRestaurantId){
+    public void addLike(OnCompleteListener<DocumentReference> pCompleteListener,String pColleagueId, String pRestaurantId){
         FirebaseFirestore db =FirebaseFirestore.getInstance();
 
         Map<String,String> like = new HashMap<>();
@@ -77,7 +77,18 @@ public class FireBaseConnector {
 
         db.collection("Like")
                 .add(like)
-                .addOnCompleteListener(pSuccessListener);
+                .addOnCompleteListener(pCompleteListener);
+    }
+
+    public void registerColleague(OnCompleteListener<Void> pCompleteListener, String pName, String pId){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Map<String,String> colleagueMap = new HashMap<>();
+        colleagueMap.put("name",pName);
+
+        db.collection("Colleague").document(pId)
+                .set(colleagueMap)
+                .addOnCompleteListener(pCompleteListener);
     }
 
     public void getWish(OnCompleteListener pListener){
