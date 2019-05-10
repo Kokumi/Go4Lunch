@@ -17,6 +17,7 @@ import com.debruyckere.florian.go4lunch.Model.FireBaseConnector;
 import com.debruyckere.florian.go4lunch.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -75,7 +76,9 @@ public class ColleagueListFragment extends BaseFragment {
                                 ,(String) document.getData().get("surname")
                                 ,(String) document.getData().get("photo"));
 
-                        mData.add(colleague);
+                        if(!colleague.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                            mData.add(colleague);
+                        }
                         mRecyclerView.setAdapter(new ColleagueAdapter(mData, mContext));
                     }
                 }else{
