@@ -144,18 +144,19 @@ public class MainActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK){
                 //mText.setText("Welcome "+mAuth.getCurrentUser().getEmail());
                 signUpFirebase();
-
-                Intent intent = new Intent(this,appActivity.class);
-                startActivity(intent);
+                nextScreen();
+            } else {
+                if(response != null && response.getError() != null)
+                Log.e("Sign UP ERROR",response.getError().getMessage());
             }
         } else { // ERRORS
             if (response == null) {
                 Toast.makeText(this,"Sign in Canceled", Toast.LENGTH_SHORT).show();
             } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
                 Toast.makeText(getApplicationContext(),"No network, verify your Connection", Toast.LENGTH_SHORT).show();
-            } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+            } else {
                 Toast.makeText(getApplicationContext(),"Unfortunately, a unknown error has Arrived", Toast.LENGTH_SHORT).show();
-
+                Log.e("Sign UP ERROR",response.getError().getMessage());
             }
         }
     }
@@ -167,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
                 if(task.isSuccessful() & task.getResult ()!= null & mAuth.getCurrentUser() != null){
                     Boolean alreadySignIn = false;
                     for(QueryDocumentSnapshot document :task.getResult()){
-
                         if(mAuth.getCurrentUser().getUid().equals(document.getId()))
                             alreadySignIn = true;
 

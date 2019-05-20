@@ -25,6 +25,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -180,6 +181,7 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
                             mLastKnowLocation = (Location) task.getResult();
                             mMap.moveCamera(CameraUpdateFactory.newLatLng(
                                     new LatLng(mLastKnowLocation.getLatitude(),mLastKnowLocation.getLongitude())
+                                    //new LatLng(50.701892,3.134505)
                                     ));
                             mMap.setMinZoomPreference(16f);
                         }else {
@@ -200,7 +202,8 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
     public void getPlaces(){
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID,Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.TYPES);
 
-        FindCurrentPlaceRequest currentRequest = FindCurrentPlaceRequest.builder(placeFields).build();
+        FindCurrentPlaceRequest currentRequest = FindCurrentPlaceRequest.builder(placeFields)
+                .build();
 
         if(ContextCompat.checkSelfPermission(mContext,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) ==

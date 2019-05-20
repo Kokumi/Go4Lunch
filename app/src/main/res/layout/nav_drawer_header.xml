@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:orientation="vertical"
+    android:background="@color/quantum_amber300">
+
+    <TextView
+        android:id="@+id/drawer_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:text="@string/drawer_header"
+        android:layout_marginTop="80dp"
+        android:layout_marginStart="50dp"/>
+
+    <ImageView
+        android:id="@+id/drawer_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/common_full_open_on_phone"
+        android:layout_marginTop="180dp"
+        android:layout_marginStart="20dp"
+        android:contentDescription="@string/drawer_image_description"/>
+    <TextView
+        android:id="@+id/drawer_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/drawer_image"
+        android:text="@string/drawer_user_name"
+        android:layout_alignTop="@+id/drawer_image"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/drawer_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/drawer_image"
+        android:text="@string/drawer_user_email"
+        android:layout_alignBottom="@+id/drawer_image"
+        android:layout_marginBottom="10dp" />
+</RelativeLayout>
