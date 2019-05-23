@@ -231,8 +231,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                     if(document.getData() != null){
 
                         Colleague colleague = new Colleague(document.getId(),
-                                                            document.getData().get("name").toString(),
-                                                            document.getData().get("surname").toString());
+                                                            document.getData().get("name").toString());
 
                         data.add(colleague);
                         }

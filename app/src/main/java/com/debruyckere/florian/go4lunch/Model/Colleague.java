@@ -24,6 +24,11 @@ public class Colleague {
         this.mSurname = surname;
     }
 
+    public Colleague(String id, String name){
+        this.id = id;
+        this.mName = name;
+    }
+
     public String getId() {
         return id;
     }

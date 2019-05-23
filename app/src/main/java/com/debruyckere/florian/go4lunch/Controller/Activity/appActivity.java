@@ -1,5 +1,6 @@
 package com.debruyckere.florian.go4lunch.Controller.Activity;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -12,18 +13,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.debruyckere.florian.go4lunch.Model.FireBaseConnector;
 import com.debruyckere.florian.go4lunch.Model.ViewPagerAdapter;
 import com.debruyckere.florian.go4lunch.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.util.Calendar;
 
 public class appActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -52,25 +61,22 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
 
     private void configureNavigationDrawer(){
         NavigationView mNavigationView = findViewById(R.id.app_navigation);
+        View headerView = mNavigationView.getHeaderView(0);
         mNavigationView.setNavigationItemSelectedListener(this);
         mDrawer = findViewById(R.id.app_drawer);
         mDrawer.closeDrawer(GravityCompat.START);
 
-        final TextView tName = findViewById(R.id.drawer_user_name);
-        TextView tEmail = findViewById(R.id.drawer_email);
-        ImageView userImage = findViewById(R.id.drawer_image);
+        final TextView tName = headerView.findViewById(R.id.drawer_user_name);
+        TextView tEmail = headerView.findViewById(R.id.drawer_email);
+        ImageView userImage = headerView.findViewById(R.id.drawer_image);
 
-        //FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        //UserInfo user = currentUser.getProviderData().get(0);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        tName.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                tName.setText(currentUser.getDisplayName());
-            }
-        },1000);
-
+        if(currentUser != null) {
+            tName.setText(currentUser.getDisplayName());
+            tEmail.setText(currentUser.getEmail());
+            new userImageTask(userImage).execute(currentUser.getPhotoUrl().toString());
+        }
 
     }
 
@@ -80,10 +86,50 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
 
         switch (id){
             case R.id.drawer_lunch:
+                //Show the user wish of the day
+                new FireBaseConnector().GetWishOfColleague(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if(task.getResult() != null){
+                        for(DocumentSnapshot document : task.getResult()){
+                            Calendar calendar = Calendar.getInstance();
+                            if(document.get("date") == calendar.getTime()){
+
+                                //Get data of the restaurant wishes
+                                new FireBaseConnector().getRestaurantData(new OnCompleteListener<FetchPlaceResponse>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<FetchPlaceResponse> task) {
+                                        if(task.getResult() != null){
+                                            Toast.makeText(getApplicationContext(),
+                                                    "you want go to "+task.getResult().getPlace().getName(),
+                                                    Toast.LENGTH_LONG)
+                                            .show();
+                                        }else {
+                                            Toast.makeText(getApplicationContext(),"You go nowhere today",Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                },getApplicationContext(),document.get("RestaurantId").toString());
+
+                            }else {
+                                Toast.makeText(getApplicationContext(),"You go nowhere today",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                    Toast.makeText(getApplicationContext(),"You go nowhere today",Toast.LENGTH_SHORT).show();
+                }
+            },FirebaseAuth.getInstance().getCurrentUser().getUid());
                 break;
+
             case R.id.drawer_settings:
+                Intent settingIntent = new Intent(this,SettingActivity.class);
+                startActivity(settingIntent);
                 break;
+
             case R.id.drawer_logout:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                Intent goBack = new Intent(this,MainActivity.class);
+                startActivity(goBack);
                 break;
         }
         mDrawer.closeDrawer(GravityCompat.START);

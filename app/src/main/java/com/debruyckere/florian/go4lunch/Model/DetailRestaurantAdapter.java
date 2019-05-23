@@ -61,7 +61,8 @@ public class DetailRestaurantAdapter extends RecyclerView.Adapter<DetailRestaura
 
         private void display(Colleague pColleague){
 
-            mText.setText(new StringBuilder(pColleague.getName()+" "+pColleague.getSurname() + " is joining"));
+
+            mText.setText(new StringBuilder(pColleague.getName() + " is joining"));
             mProgressBar.setVisibility(View.GONE);
         }
     }
