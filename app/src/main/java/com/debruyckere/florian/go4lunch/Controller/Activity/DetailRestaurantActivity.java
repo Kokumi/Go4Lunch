@@ -37,8 +37,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class DetailRestaurantActivity extends AppCompatActivity {
 
@@ -79,6 +81,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
     }
 
     private void buttonParameter(){
+        //add Wish button
         mValidationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,6 +146,10 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * get data of the restaurant
+     * @param pId id of the restaurant
+     */
     private void getData(String pId){
         new FireBaseConnector().getRestaurantData(
                 new OnCompleteListener<FetchPlaceResponse>() {
@@ -198,17 +205,25 @@ public class DetailRestaurantActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * get colleague who wish to go in this restaurant
+     */
     private void getColleagueData(){
         final FireBaseConnector FBC = new FireBaseConnector();
         //step1: Get ID from wish with @
         FBC.getWishByAddress(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful() && task.getResult() != null){
+                if(task.getResult() != null){
                     for(QueryDocumentSnapshot document : task.getResult()){
-                        String colleagueId = document.getData().get("colleagueId").toString();
 
-                        FBC.getColleagueById(getColleagueListener(),colleagueId);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                        if(dateFormat.format(document.getDate("date")).equals(dateFormat.format(Calendar.getInstance().getTime()))) {
+
+                            String colleagueId = document.getData().get("colleagueId").toString();
+
+                            FBC.getColleagueById(getColleagueListener(), colleagueId);
+                        }
                     }
                 }else{
                     if (task.getException() != null)
@@ -221,6 +236,10 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         },mRestaurant.getAddress());
     }
 
+    /**
+     * get colleague Data
+     * @return listener who collect data
+     */
     private OnCompleteListener<DocumentSnapshot> getColleagueListener(){
         return new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -232,6 +251,8 @@ public class DetailRestaurantActivity extends AppCompatActivity {
 
                         Colleague colleague = new Colleague(document.getId(),
                                                             document.getData().get("name").toString());
+
+                        colleague.setPicture(document.getData().get("photo").toString());
 
                         data.add(colleague);
                         }

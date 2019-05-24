@@ -1,7 +1,10 @@
 package com.debruyckere.florian.go4lunch.Model;
 
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,9 @@ import android.widget.TextView;
 
 import com.debruyckere.florian.go4lunch.R;
 
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -18,7 +24,7 @@ import java.util.ArrayList;
  */
 public class DetailRestaurantAdapter extends RecyclerView.Adapter<DetailRestaurantAdapter.DetailRestaurantViewHolder> {
 
-    ArrayList<Colleague> mData;
+    private ArrayList<Colleague> mData;
 
     public DetailRestaurantAdapter(ArrayList<Colleague> pData){
         mData = pData;
@@ -60,10 +66,37 @@ public class DetailRestaurantAdapter extends RecyclerView.Adapter<DetailRestaura
         }
 
         private void display(Colleague pColleague){
-
-
+            new userImageTask(mImageView).execute(pColleague.getPicture());
             mText.setText(new StringBuilder(pColleague.getName() + " is joining"));
             mProgressBar.setVisibility(View.GONE);
+        }
+    }
+
+    static class userImageTask extends AsyncTask<String,Void, Drawable>{
+
+        WeakReference<ImageView> mImageReference;
+
+        private userImageTask(ImageView pImage){
+            mImageReference = new WeakReference<>(pImage);
+        }
+
+        @Override
+        protected void onPostExecute(Drawable drawable) {
+            mImageReference.get().setImageDrawable(drawable);
+            super.onPostExecute(drawable);
+        }
+
+        @Override
+        protected Drawable doInBackground(String... strings) {
+            Drawable retour = null;
+            try {
+                InputStream is = (InputStream) new URL(strings[0]).getContent();
+                retour = Drawable.createFromStream(is,"src name");
+            }catch (Exception e){
+                Log.e("User Image Error",e.getMessage());
+            }
+
+            return retour;
         }
     }
 }

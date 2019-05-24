@@ -95,9 +95,7 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if(task.getResult() != null){
                         for(DocumentSnapshot document : task.getResult()){
-                            Calendar calendar = Calendar.getInstance();
                             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                           Timestamp tm = document.getTimestamp("date");
                            if(dateFormat.format(document.getDate("date")).equals(dateFormat.format(Calendar.getInstance().getTime()))){
                            //if(document.get("date") == Calendar.getInstance().getTime()){
 
