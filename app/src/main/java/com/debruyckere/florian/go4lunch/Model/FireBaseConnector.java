@@ -61,6 +61,7 @@ public class FireBaseConnector {
         wish.put("colleagueId",pWish.getColleague().getId());
         wish.put("date", Calendar.getInstance().getTime());
         wish.put("restaurantAdresse",pWish.getRestaurant().getAddress());
+        wish.put("restaurantId",pWish.getRestaurant().getId());
 
         db.collection("Wish")
                 .add(wish)
@@ -146,7 +147,7 @@ public class FireBaseConnector {
     public void getRestaurantData(OnCompleteListener pListener, Context pContext,String pId){
         PlacesClient client = Places.createClient(pContext);
 
-        final List<Place.Field> placesFields= Arrays.asList(Place.Field.NAME,Place.Field.LAT_LNG,
+        final List<Place.Field> placesFields= Arrays.asList(Place.Field.ID,Place.Field.NAME,Place.Field.LAT_LNG,
                 Place.Field.TYPES,Place.Field.RATING,Place.Field.PHOTO_METADATAS,Place.Field.OPENING_HOURS,
                 Place.Field.ADDRESS_COMPONENTS);
         FetchPlaceRequest request = FetchPlaceRequest.builder(pId,placesFields).build();

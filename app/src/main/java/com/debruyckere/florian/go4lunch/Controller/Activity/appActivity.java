@@ -24,6 +24,7 @@ import com.debruyckere.florian.go4lunch.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.net.FetchPlaceResponse;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -32,7 +33,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class appActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -93,10 +96,13 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
                     if(task.getResult() != null){
                         for(DocumentSnapshot document : task.getResult()){
                             Calendar calendar = Calendar.getInstance();
-                            if(document.get("date") == calendar.getTime()){
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                           Timestamp tm = document.getTimestamp("date");
+                           if(dateFormat.format(document.getDate("date")).equals(dateFormat.format(Calendar.getInstance().getTime()))){
+                           //if(document.get("date") == Calendar.getInstance().getTime()){
 
                                 //Get data of the restaurant wishes
-                                new FireBaseConnector().getRestaurantData(new OnCompleteListener<FetchPlaceResponse>() {
+                               new FireBaseConnector().getRestaurantData(new OnCompleteListener<FetchPlaceResponse>() {
                                     @Override
                                     public void onComplete(@NonNull Task<FetchPlaceResponse> task) {
                                         if(task.getResult() != null){
@@ -108,7 +114,7 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
                                             Toast.makeText(getApplicationContext(),"You go nowhere today",Toast.LENGTH_SHORT).show();
                                         }
                                     }
-                                },getApplicationContext(),document.get("RestaurantId").toString());
+                                },getApplicationContext(),document.get("restaurantId").toString());
 
                             }else {
                                 Toast.makeText(getApplicationContext(),"You go nowhere today",Toast.LENGTH_SHORT).show();

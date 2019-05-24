@@ -10,11 +10,13 @@ public class Wish {
     private Date mDate;
     private Colleague mColleague;
     private Restaurant mRestaurant;
+    private int restaurantId;
 
     public Wish(Date date, Colleague colleague, Restaurant restaurant) {
         mDate = date;
         mColleague = colleague;
         mRestaurant = restaurant;
+        //restaurantId = pId;,int pId
     }
 
     public Date getDate() {
@@ -39,5 +41,13 @@ public class Wish {
 
     public void setRestaurant(Restaurant restaurant) {
         mRestaurant = restaurant;
+    }
+
+    public int getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(int restaurantId) {
+        this.restaurantId = restaurantId;
     }
 }
