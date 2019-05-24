@@ -1,6 +1,12 @@
 package com.debruyckere.florian.go4lunch.Controller.Activity;
 
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,20 +16,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.debruyckere.florian.go4lunch.Model.Colleague;
+import com.debruyckere.florian.go4lunch.Model.AlarmReceiver;
 import com.debruyckere.florian.go4lunch.Model.FireBaseConnector;
-import com.debruyckere.florian.go4lunch.Model.Restaurant;
-import com.debruyckere.florian.go4lunch.Model.Wish;
 import com.debruyckere.florian.go4lunch.R;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     //go4lunch-3b9d8
     private static final int RC_SIGN_IN = 123;
+    private static final String  CHANNEL_ID = "g4l";
     private FirebaseAuth mAuth;
 
     @BindView(R.id.main_login_button)Button mLoginButton ;
@@ -59,33 +61,9 @@ public class MainActivity extends AppCompatActivity {
         mOutButton = findViewById(R.id.main_outbutton);
 
 
-
+        createNotificationChannel();
+        configureAlarmManager();
         onClickParameter();
-
-    }
-
-    public void task(){
-        FireBaseConnector FBC = new FireBaseConnector();
-
-        OnSuccessListener<DocumentReference> sucessLi = new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.i("FirebaseConnector","Wish Added");
-            }
-        };
-
-        OnFailureListener failLi = new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i("FirebaseConnector","Fail");
-                e.printStackTrace();
-            }
-        };
-        Colleague me = new Colleague("sYleg2zzfVrkXygyMXvN" ,"Test","Bertrand");
-        Restaurant restaurant = new Restaurant("1","12 Pierre du feu");
-        Wish myWish = new Wish(Calendar.getInstance().getTime(),me,restaurant);
-
-        FBC.addWish(sucessLi,failLi,myWish);
 
     }
 
@@ -98,12 +76,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mTestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                task();
-            }
-        });
 
         mOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //--------------------------
+    // Firebase authentication
+    //--------------------------
 
 
     public void startSignInActivity(){
@@ -134,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         this.handleResponseAfterSignIn(requestCode,resultCode,data);
     }
-
 
 
     private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data){
@@ -192,6 +166,47 @@ public class MainActivity extends AppCompatActivity {
 
         FireBaseConnector FBC = new FireBaseConnector();
         FBC.getColleague(listener);
+    }
+
+
+
+
+    //------------------
+    // Notification
+    //------------------
+
+    private void createNotificationChannel(){
+        if(Build.VERSION.SDK_INT >= 26) {
+            CharSequence name = "Go4Lunch notification";
+            String description = "Channel of notification for Go4Lunch";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            if(notificationManager != null)
+                notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    public void configureAlarmManager(){
+        AlarmManager alarm = (AlarmManager) this.getSystemService(this.ALARM_SERVICE);
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR,12);               //alarm set to active at 12 hour
+        cal.set(Calendar.MINUTE,0);
+        //cal.add(Calendar.MINUTE,1);
+        cal.set(Calendar.SECOND,0);
+
+        PendingIntent pi = PendingIntent.getBroadcast(this,0,new Intent(this, AlarmReceiver.class),0);
+        SharedPreferences preferences = getSharedPreferences("notificationSet",MODE_PRIVATE);
+
+        if(preferences.getBoolean("notification",false) && alarm != null){
+            alarm.setRepeating(AlarmManager.RTC_WAKEUP,cal.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pi);
+        }else {
+            if(alarm != null)
+            alarm.cancel(pi);
+        }
     }
 
     private void nextScreen(){
