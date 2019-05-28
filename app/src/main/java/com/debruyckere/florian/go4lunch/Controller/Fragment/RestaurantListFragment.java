@@ -16,10 +16,8 @@ import com.debruyckere.florian.go4lunch.Model.Restaurant;
 import com.debruyckere.florian.go4lunch.Model.RestaurantAdapter;
 import com.debruyckere.florian.go4lunch.R;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FetchPhotoResponse;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import java.util.ArrayList;
 

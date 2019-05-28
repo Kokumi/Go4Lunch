@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.util.Log;
 
+import com.debruyckere.florian.go4lunch.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.net.FetchPlaceResponse;
@@ -25,17 +27,20 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private static final String  CHANNEL_ID = "g4l";
     private Context mContext;
+    private Boolean mGoSomewhere = false;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         mContext = context;
         getWishData();
+        Log.i("ALARM MANAGER","ALARM RECEPTION");
     }
 
     private NotificationCompat.Builder notificationBuilder(String pName){
         return new NotificationCompat.Builder(mContext,CHANNEL_ID)
                 .setContentTitle("Your lunch")
                 .setContentText("today you choose to go: "+ pName)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
     }
 
@@ -57,20 +62,22 @@ public class AlarmReceiver extends BroadcastReceiver {
                                     if(task.getResult() != null){
 
                                         nMC.notify(0,notificationBuilder(task.getResult().getPlace().getName()).build());
+                                        mGoSomewhere = true;
 
                                     }else {
-                                        nMC.notify(0,notificationBuilder("nowhere").build());
+                                        nMC.notify(0,notificationBuilder("unknown place").build());
+                                        mGoSomewhere = true;
                                     }
                                 }
                             },mContext,document.get("restaurantId").toString());
 
-                        }else {
-                            nMC.notify(0,notificationBuilder("nowhere").build());
                         }
                     }
                 }
-                nMC.notify(0,notificationBuilder("nowhere").build());
             }
         }, FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        if(!mGoSomewhere)
+            nMC.notify(0,notificationBuilder("nowhere").build());
     }
 }

@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     //go4lunch-3b9d8
     private static final int RC_SIGN_IN = 123;
-    private static final String  CHANNEL_ID = "g4l";
+
     private FirebaseAuth mAuth;
 
     @BindView(R.id.main_login_button)Button mLoginButton ;
@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
         mOutButton = findViewById(R.id.main_outbutton);
 
 
-        createNotificationChannel();
-        configureAlarmManager();
+        //createNotificationChannel();
+        //configureAlarmManager();
         onClickParameter();
 
     }
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         } else { // ERRORS
             if (response == null) {
                 Toast.makeText(this,"Sign in Canceled", Toast.LENGTH_SHORT).show();
-            } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+            } else if (response.getError() != null && response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
                 Toast.makeText(getApplicationContext(),"No network, verify your Connection", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getApplicationContext(),"Unfortunately, a unknown error has Arrived", Toast.LENGTH_SHORT).show();
@@ -175,39 +175,9 @@ public class MainActivity extends AppCompatActivity {
     // Notification
     //------------------
 
-    private void createNotificationChannel(){
-        if(Build.VERSION.SDK_INT >= 26) {
-            CharSequence name = "Go4Lunch notification";
-            String description = "Channel of notification for Go4Lunch";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
 
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            if(notificationManager != null)
-                notificationManager.createNotificationChannel(channel);
-        }
-    }
 
-    public void configureAlarmManager(){
-        AlarmManager alarm = (AlarmManager) this.getSystemService(this.ALARM_SERVICE);
 
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR,12);               //alarm set to active at 12 hour
-        cal.set(Calendar.MINUTE,0);
-        //cal.add(Calendar.MINUTE,1);
-        cal.set(Calendar.SECOND,0);
-
-        PendingIntent pi = PendingIntent.getBroadcast(this,0,new Intent(this, AlarmReceiver.class),0);
-        SharedPreferences preferences = getSharedPreferences("notificationSet",MODE_PRIVATE);
-
-        if(preferences.getBoolean("notification",false) && alarm != null){
-            alarm.setRepeating(AlarmManager.RTC_WAKEUP,cal.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pi);
-        }else {
-            if(alarm != null)
-            alarm.cancel(pi);
-        }
-    }
 
     private void nextScreen(){
         Intent intent = new Intent(this,appActivity.class);

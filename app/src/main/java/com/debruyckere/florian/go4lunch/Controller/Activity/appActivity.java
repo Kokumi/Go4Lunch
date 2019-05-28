@@ -1,8 +1,15 @@
 package com.debruyckere.florian.go4lunch.Controller.Activity;
 
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -18,13 +25,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.debruyckere.florian.go4lunch.Model.AlarmReceiver;
 import com.debruyckere.florian.go4lunch.Model.FireBaseConnector;
 import com.debruyckere.florian.go4lunch.Model.ViewPagerAdapter;
 import com.debruyckere.florian.go4lunch.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.net.FetchPlaceResponse;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -40,6 +47,7 @@ import java.util.Locale;
 public class appActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
    private DrawerLayout mDrawer;
+    private static final String  CHANNEL_ID = "g4l";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +56,8 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
 
         configureViewPager();
         configureNavigationDrawer();
+        createNotificationChannel();
+        configureAlarmManager();
     }
 
     private void configureViewPager(){
@@ -174,6 +184,45 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
             }
 
             return retour;
+        }
+    }
+
+    private void createNotificationChannel(){
+        if(Build.VERSION.SDK_INT >= 26) {
+            CharSequence name = "Go4Lunch notification";
+            String description = "Channel of notification for Go4Lunch";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            if(notificationManager != null)
+                notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+
+    public void configureAlarmManager(){
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(System.currentTimeMillis());
+        //cal.set(Calendar.HOUR,12);               //alarm set to active at 12 hour
+        //cal.set(Calendar.MINUTE,0);
+        cal.add(Calendar.MINUTE,1);
+        cal.set(Calendar.SECOND,0);
+        Log.i("ALARM MANAGER","alarm set for: "+cal.getTime());
+
+        PendingIntent pi = PendingIntent.getBroadcast(this,1,new Intent(this, AlarmReceiver.class),PendingIntent.FLAG_UPDATE_CURRENT);
+        SharedPreferences preferences = getSharedPreferences("notificationSet",MODE_PRIVATE);
+
+        if(preferences.getBoolean("notification",false) && alarm != null){
+            alarm.setRepeating(AlarmManager.RTC_WAKEUP,cal.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pi);
+            Log.i("ALARM MANAGER","alarm activate");
+        }else {
+            if(alarm != null)
+                alarm.cancel(pi);
+            Log.i("ALARM MANAGER","alarm disable");
         }
     }
 }
