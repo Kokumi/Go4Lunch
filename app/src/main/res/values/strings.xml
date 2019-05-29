@@ -28,4 +28,5 @@
     <string name="drawer_user_email">EMail</string>
     <string name="setting_notification_text">Notification</string>
     <string name="setting_explanation">You will receive a notification each day at noon about where you want lunch this day</string>
+    <string name="actionbar_search">Search</string>
 </resources>

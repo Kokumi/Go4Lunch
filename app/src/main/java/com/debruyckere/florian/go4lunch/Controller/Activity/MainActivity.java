@@ -1,12 +1,6 @@
 package com.debruyckere.florian.go4lunch.Controller.Activity;
 
-import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,7 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.debruyckere.florian.go4lunch.Model.AlarmReceiver;
 import com.debruyckere.florian.go4lunch.Model.FireBaseConnector;
 import com.debruyckere.florian.go4lunch.R;
 import com.firebase.ui.auth.AuthUI;
@@ -29,7 +22,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Arrays;
-import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

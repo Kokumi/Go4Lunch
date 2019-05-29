@@ -7,10 +7,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.support.v7.widget.Toolbar;
 
 import com.debruyckere.florian.go4lunch.Model.FireBaseConnector;
 import com.debruyckere.florian.go4lunch.R;
@@ -37,7 +42,9 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,14 +52,13 @@ import java.util.List;
 public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCallback {
 
     private Context mContext;
-    //private MapView mMapView;
+    private ArrayList<MarkerOptions> mData;
     private GoogleMap mMap;
     private PlacesClient mPlacesClient ;
     private Boolean mLocationPermissionGranted=false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mLastKnowLocation;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 14;
-
 
 
     public RestaurantMapFragment() {
@@ -75,6 +81,8 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
         if(getActivity() != null)
         mContext = getActivity().getApplicationContext();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
+        mData = new ArrayList<>();
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -97,8 +105,46 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
         }
 
         mapView.getMapAsync(this);
+        toolbarConfiguration(view);
 
         return view;
+    }
+
+    private void toolbarConfiguration(View view){
+        Toolbar toolbar = view.findViewById(R.id.fragment_map_toolbar);
+
+        if(getActivity() != null){
+            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+            if(((AppCompatActivity)getActivity()).getSupportActionBar()!= null)
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("restaurant map");
+        }
+        mMaterialSearchView = view.findViewById(R.id.fragment_map_search);
+        mMaterialSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {return false;}
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText != null && !newText.isEmpty()) {
+                    for (MarkerOptions marker : mData)
+                        if (marker.getTitle().contains(newText))
+                            mMap.addMarker(marker);
+                }else
+                    for(MarkerOptions marker : mData)
+                        mMap.addMarker(marker);
+
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if(getActivity() != null)
+        getActivity().getMenuInflater().inflate(R.menu.actionbar_menu,menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        mMaterialSearchView.setMenuItem(item);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -131,15 +177,7 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
                                            @NonNull int[] grantResults){
 
         mLocationPermissionGranted = false;
-        /*switch (requestCode) {
-            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mLocationPermissionGranted = true;
-                }
-            }
-        }*/
+
         if(requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED)
@@ -235,6 +273,7 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
                                                     .title(placeLikelihood.getPlace().getName())
                                                     .snippet(placeLikelihood.getPlace().getTypes().get(0).toString());
                                         }
+                                        mData.add(marker);
                                         mMap.addMarker(marker);
                                     }
                                 }
@@ -242,8 +281,6 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
 
 
                             Log.i("Map","add marker for: "+placeLikelihood.getPlace().getName());
-                            /*mMap.addMarker(new MarkerOptions().position(placeLikelihood.getPlace().getLatLng())
-                                    .title(placeLikelihood.getPlace().getName() + " " + placeLikelihood.getPlace().getTypes().get(0)));*/
                         }
                     }
                 }

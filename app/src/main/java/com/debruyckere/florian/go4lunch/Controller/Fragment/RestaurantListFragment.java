@@ -4,10 +4,15 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,6 +24,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
+
 import java.util.ArrayList;
 
 
@@ -27,6 +34,7 @@ public class RestaurantListFragment extends BaseFragment {
     private RecyclerView mRecycler;
     private Context mContext;
     private Location mUserLocation;
+    private ArrayList<Restaurant> mData;
 
     public RestaurantListFragment() {
         // Required empty public constructor
@@ -47,6 +55,7 @@ public class RestaurantListFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if(getActivity() != null)
         mContext = getActivity().getApplicationContext();
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -61,9 +70,51 @@ public class RestaurantListFragment extends BaseFragment {
 
         mRecycler = view.findViewById(R.id.list_recycler);
         mRecycler.setLayoutManager(new LinearLayoutManager(mContext));
+        toolbarConfiguration(view);
 
 
         return view;
+    }
+
+    private void toolbarConfiguration(View view){
+        Toolbar toolbar = view.findViewById(R.id.fragment_toolbar);
+
+        if((getActivity() != null)) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("restaurant List");
+        }
+        mMaterialSearchView = view.findViewById(R.id.fragment_search);
+        mMaterialSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText != null && !newText.isEmpty()){
+                    ArrayList<Restaurant> found = new ArrayList<>();
+                    for(Restaurant restaurant : mData){
+                        if(restaurant.getName().contains(newText))
+                            found.add(restaurant);
+                    }
+                    mRecycler.setAdapter(new RestaurantAdapter(found,mContext));
+                }else
+                    mRecycler.setAdapter(new RestaurantAdapter(mData,mContext));
+
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (getActivity() != null)
+        getActivity().getMenuInflater().inflate(R.menu.actionbar_menu,menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        mMaterialSearchView.setMenuItem(item);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
 
@@ -110,6 +161,7 @@ public class RestaurantListFragment extends BaseFragment {
                     }
                     //---------------------
                     //Set Adapter with Data
+                    mData = data;
                     mRecycler.setAdapter(new RestaurantAdapter(data,mContext));
                 }
                 else{
