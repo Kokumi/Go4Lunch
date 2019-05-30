@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful() & task.getResult ()!= null & mAuth.getCurrentUser() != null){
-                    Boolean alreadySignIn = false;
+                    boolean alreadySignIn = false;
                     for(QueryDocumentSnapshot document :task.getResult()){
                         if(mAuth.getCurrentUser().getUid().equals(document.getId()))
                             alreadySignIn = true;

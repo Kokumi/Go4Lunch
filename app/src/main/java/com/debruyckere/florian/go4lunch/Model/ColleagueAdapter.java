@@ -84,7 +84,7 @@ public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.Coll
             return new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    Boolean hadChoice = false;
+                    boolean hadChoice = false;
                     if( task.getResult() != null){
                         for(DocumentSnapshot document : task.getResult()){
                             if(document.get("date") == Calendar.getInstance().getTime()){

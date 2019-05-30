@@ -95,7 +95,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                     new FireBaseConnector().addWish(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
-                            Log.i("ADD WISH", "Add wish Succeed");
+                            mValidationButton.setImageResource(R.drawable.ic_success_icon);
                         }
                     }, new OnFailureListener() {
                         @Override
@@ -123,7 +123,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                 new FireBaseConnector().addLike(new OnCompleteListener<DocumentReference>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentReference> task) {
-                        mLikeButton.setImageAlpha(R.drawable.quantum_ic_clear_grey600_24);
+                        mLikeButton.setImageResource(R.drawable.ic_heart_full);
                     }
                 },FirebaseAuth.getInstance().getCurrentUser().getUid()
                 ,mRestaurant.getId());
@@ -184,6 +184,22 @@ public class DetailRestaurantActivity extends AppCompatActivity {
 
                             display();
                             getColleagueData();
+
+                            if(FirebaseAuth.getInstance().getCurrentUser() != null)
+                                new FireBaseConnector().getLike(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        boolean liked = false;
+                                        if(task.getResult() != null) {
+                                            for (QueryDocumentSnapshot document : task.getResult()){
+                                                if(document.get("restaurantId").toString().equals(mRestaurant.getId()))
+                                                    liked = true;
+                                            }
+                                        }
+                                        if(liked)
+                                            mLikeButton.setImageResource(R.drawable.ic_heart_full);
+                                    }
+                                },FirebaseAuth.getInstance().getCurrentUser().getUid());
                         }else {
                             if(task.getException()!= null)
                                 Log.e("DETAIL_TASK",task.getException().getMessage());
@@ -220,9 +236,16 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                         if(dateFormat.format(document.getDate("date")).equals(dateFormat.format(Calendar.getInstance().getTime()))) {
 
-                            String colleagueId = document.getData().get("colleagueId").toString();
+                            if(FirebaseAuth.getInstance().getCurrentUser() != null &&
+                                    document.getData().get("colleagueId").toString().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                                mValidationButton.setImageResource(R.drawable.ic_success_icon);
+                            }else {
+                                String colleagueId = document.getData().get("colleagueId").toString();
 
-                            FBC.getColleagueById(getColleagueListener(), colleagueId);
+                                FBC.getColleagueById(getColleagueListener(), colleagueId);
+                            }
+
+
                         }
                     }
                 }else{

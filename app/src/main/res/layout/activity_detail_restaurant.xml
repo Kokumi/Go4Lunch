@@ -43,7 +43,8 @@
             android:layout_height="50dp"
             android:layout_margin="10dp"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/common_full_open_on_phone"
+            android:src="@drawable/ic_valid_icon"
+            android:scaleType="centerCrop"
             android:contentDescription="@string/detail_description_validation_button"/>
 
     </RelativeLayout>
@@ -54,6 +55,7 @@
         android:layout_height="75dp"
         android:layout_below="@+id/detail_second_layout"
         android:src="@drawable/fui_ic_phone_white_24dp"
+        android:scaleType="centerInside"
         android:contentDescription="@string/detail_description_call"/>
 
     <ImageButton
@@ -62,7 +64,8 @@
         android:layout_height="75dp"
         android:layout_below="@id/detail_second_layout"
         android:layout_toEndOf="@+id/detail_call"
-        android:src="@drawable/quantum_ic_arrow_back_grey600_24"
+        android:src="@drawable/ic_heart_empty"
+        android:scaleType="centerCrop"
         android:contentDescription="@string/detail_description_like"/>
 
     <ImageButton
@@ -71,7 +74,8 @@
         android:layout_height="75dp"
         android:layout_below="@id/detail_second_layout"
         android:layout_toEndOf="@id/detail_like"
-        android:src="@drawable/quantum_ic_cloud_off_vd_theme_24"
+        android:src="@drawable/ic_earth"
+        android:scaleType="centerInside"
         android:contentDescription="@string/detail_description_website"/>
 
     <android.support.v7.widget.RecyclerView

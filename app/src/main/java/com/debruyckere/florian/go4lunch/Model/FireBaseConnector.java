@@ -119,6 +119,15 @@ public class FireBaseConnector {
                 .addOnCompleteListener(pListener);
     }
 
+    public void getLike(OnCompleteListener<QuerySnapshot> pListener, String pColleagueId){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Like")
+                .whereEqualTo("colleagueId",pColleagueId)
+                .get()
+                .addOnCompleteListener(pListener);
+    }
+
     public void getUserLocation(Context pContext, OnCompleteListener pListener){
         FusedLocationProviderClient FusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(pContext);
 

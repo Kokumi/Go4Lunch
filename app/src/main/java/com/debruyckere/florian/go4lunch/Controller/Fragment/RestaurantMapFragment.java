@@ -203,9 +203,9 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
+                                           @NonNull String[] permissions,
                                            @NonNull int[] grantResults){
-
+//String permissions[]
         mLocationPermissionGranted = false;
 
         if(requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)

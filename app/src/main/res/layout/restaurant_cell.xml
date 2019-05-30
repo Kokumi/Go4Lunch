@@ -59,7 +59,8 @@
         android:id="@+id/restaurant_cell_star1"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@android:drawable/ic_lock_lock"
+        android:src="@drawable/ic_star"
+        android:scaleType="centerInside"
         android:layout_toStartOf="@id/restaurant_cell_image"
         android:layout_below="@id/restaurant_cell_colleague"
         android:visibility="invisible"
@@ -71,7 +72,8 @@
         android:layout_height="20dp"
         android:layout_below="@id/restaurant_cell_colleague"
         android:layout_toStartOf="@id/restaurant_cell_star1"
-        android:src="@android:drawable/ic_lock_lock"
+        android:src="@drawable/ic_star"
+        android:scaleType="centerInside"
         android:visibility="invisible"
         android:contentDescription="@string/restaurant_cell_description_rate"/>
 
@@ -81,7 +83,8 @@
         android:layout_height="20dp"
         android:layout_below="@id/restaurant_cell_colleague"
         android:layout_toStartOf="@id/restaurant_cell_star2"
-        android:src="@android:drawable/ic_lock_lock"
+        android:src="@drawable/ic_star"
+        android:scaleType="centerInside"
         android:visibility="invisible"
         android:contentDescription="@string/restaurant_cell_description_rate"/>
 
@@ -91,7 +94,8 @@
         android:layout_height="20dp"
         android:layout_below="@id/restaurant_cell_colleague"
         android:layout_toStartOf="@id/restaurant_cell_star3"
-        android:src="@android:drawable/ic_lock_lock"
+        android:src="@drawable/ic_star"
+        android:scaleType="centerInside"
         android:visibility="invisible"
         android:contentDescription="@string/restaurant_cell_description_rate"/>
 
@@ -101,7 +105,8 @@
         android:layout_height="20dp"
         android:layout_below="@id/restaurant_cell_colleague"
         android:layout_toStartOf="@id/restaurant_cell_star4"
-        android:src="@android:drawable/ic_lock_lock"
+        android:src="@drawable/ic_star"
+        android:scaleType="centerInside"
         android:visibility="invisible"
         android:contentDescription="@string/restaurant_cell_description_rate"/>
 
