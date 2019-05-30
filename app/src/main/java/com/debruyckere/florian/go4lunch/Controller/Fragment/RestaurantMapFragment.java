@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +31,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -54,6 +56,7 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
     private Context mContext;
     private ArrayList<MarkerOptions> mData;
     private GoogleMap mMap;
+    private ArrayList<Marker> mMarkerList = new ArrayList<>();
     private PlacesClient mPlacesClient ;
     private Boolean mLocationPermissionGranted=false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -110,15 +113,17 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
         return view;
     }
 
+    SearchView mSearchView;
+
     private void toolbarConfiguration(View view){
         Toolbar toolbar = view.findViewById(R.id.fragment_map_toolbar);
 
         if(getActivity() != null){
-            ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-            if(((AppCompatActivity)getActivity()).getSupportActionBar()!= null)
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("restaurant map");
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            if(((AppCompatActivity) getActivity()).getSupportActionBar() != null)
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("restaurant map");
         }
-        mMaterialSearchView = view.findViewById(R.id.fragment_map_search);
+        /*mMaterialSearchView = view.findViewById(R.id.fragment_map_search);
         mMaterialSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {return false;}
@@ -135,6 +140,31 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
 
                 return true;
             }
+        });*/
+
+        mSearchView = view.findViewById(R.id.fragment_searcht);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText != null && !newText.isEmpty()) {
+                    mMap.clear();
+                    mMarkerList.clear();
+                    for (MarkerOptions marker : mData) {
+                        if (marker.getTitle().contains(newText))
+                            Log.i("Search", "TextChanged! " + newText);
+                            mMarkerList.add(mMap.addMarker(marker));
+                    }
+                }else
+                    for(MarkerOptions marker : mData)
+                        mMarkerList.add(mMap.addMarker(marker));
+
+                return true;
+            }
         });
     }
 
@@ -142,9 +172,9 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if(getActivity() != null)
         getActivity().getMenuInflater().inflate(R.menu.actionbar_menu,menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        mMaterialSearchView.setMenuItem(item);
-        super.onCreateOptionsMenu(menu, inflater);
+        //MenuItem item = menu.findItem(R.id.action_search);
+        //mMaterialSearchView.setMenuItem(item);
+        //super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -274,7 +304,7 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
                                                     .snippet(placeLikelihood.getPlace().getTypes().get(0).toString());
                                         }
                                         mData.add(marker);
-                                        mMap.addMarker(marker);
+                                        mMarkerList.add( mMap.addMarker(marker));
                                     }
                                 }
                             },placeLikelihood.getPlace().getAddress());

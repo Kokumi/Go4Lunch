@@ -79,9 +79,9 @@ public class RestaurantListFragment extends BaseFragment {
     private void toolbarConfiguration(View view){
         Toolbar toolbar = view.findViewById(R.id.fragment_toolbar);
 
-        if((getActivity() != null)) {
+        if(getActivity() != null){
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-            if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
+            if(((AppCompatActivity) getActivity()).getSupportActionBar() != null)
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("restaurant List");
         }
         mMaterialSearchView = view.findViewById(R.id.fragment_search);
@@ -95,10 +95,9 @@ public class RestaurantListFragment extends BaseFragment {
             public boolean onQueryTextChange(String newText) {
                 if(newText != null && !newText.isEmpty()){
                     ArrayList<Restaurant> found = new ArrayList<>();
-                    for(Restaurant restaurant : mData){
+                    for(Restaurant restaurant : mData)
                         if(restaurant.getName().contains(newText))
                             found.add(restaurant);
-                    }
                     mRecycler.setAdapter(new RestaurantAdapter(found,mContext));
                 }else
                     mRecycler.setAdapter(new RestaurantAdapter(mData,mContext));
@@ -108,14 +107,14 @@ public class RestaurantListFragment extends BaseFragment {
         });
     }
 
-    @Override
+    /*@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (getActivity() != null)
         getActivity().getMenuInflater().inflate(R.menu.actionbar_menu,menu);
         MenuItem item = menu.findItem(R.id.action_search);
         mMaterialSearchView.setMenuItem(item);
         super.onCreateOptionsMenu(menu, inflater);
-    }
+    }*/
 
 
     public OnCompleteListener getListener() {
