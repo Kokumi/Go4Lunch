@@ -34,9 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     @BindView(R.id.main_login_button)Button mLoginButton ;
-    @BindView(R.id.main_testbutton)Button mTestButton;
-    @BindView(R.id.main_testText)TextView mText;
-    @BindView(R.id.main_outbutton)Button mOutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +45,8 @@ public class MainActivity extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
 
         mLoginButton = findViewById(R.id.main_login_button);
-        mTestButton = findViewById(R.id.main_testbutton);
-        mText = findViewById(R.id.main_testText);
-        mOutButton = findViewById(R.id.main_outbutton);
 
 
-        //createNotificationChannel();
-        //configureAlarmManager();
         onClickParameter();
 
     }
@@ -68,13 +60,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        mOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextScreen();
-            }
-        });
+        //mTwitterLoginButton.setCallback
     }
 
     //--------------------------
@@ -88,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
                         .createSignInIntentBuilder()
                         .setAvailableProviders(
                                 Arrays.asList(
-                                        new AuthUI.IdpConfig.GoogleBuilder().build() // SUPPORT GOOGLE
+                                        new AuthUI.IdpConfig.GoogleBuilder().build(), // SUPPORT GOOGLE
+                                        new AuthUI.IdpConfig.TwitterBuilder().build()
                                 ))
                         .setIsSmartLockEnabled(true)
                         .build(),
@@ -159,17 +146,6 @@ public class MainActivity extends AppCompatActivity {
         FireBaseConnector FBC = new FireBaseConnector();
         FBC.getColleague(listener);
     }
-
-
-
-
-    //------------------
-    // Notification
-    //------------------
-
-
-
-
 
     private void nextScreen(){
         Intent intent = new Intent(this,appActivity.class);

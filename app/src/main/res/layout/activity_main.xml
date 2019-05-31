@@ -13,27 +13,4 @@
         android:layout_height="wrap_content"
         android:text="@string/main_login"/>
 
-    <Button
-        android:id="@+id/main_testbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Test IT"
-        android:layout_marginTop="50dp"
-        />
-
-    <Button
-        android:id="@+id/main_outbutton"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="next screen"
-        />
-
-    <TextView
-        android:id="@+id/main_testText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:text="not connected"/>
-
 </RelativeLayout>
