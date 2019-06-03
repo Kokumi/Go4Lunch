@@ -1,10 +1,7 @@
 package com.debruyckere.florian.go4lunch.Model;
 
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.net.Uri;
-
-import java.net.URL;
 
 /**
  * Created by Debruyckère Florian on 02/01/2019.
@@ -21,11 +18,6 @@ public class Restaurant {
     private int distance;
     private String phoneNumber;
     private Uri webUri;
-
-    public Restaurant(String id, String address) {
-        this.id = id;
-        this.address = address;
-    }
 
     public Restaurant(String id, String name, String address, String type, String open, Integer rate) {
         this.id = id;
@@ -64,10 +56,6 @@ public class Restaurant {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getOpen() {
         return open;
     }
@@ -80,20 +68,12 @@ public class Restaurant {
         return rate;
     }
 
-    public void setRate(Integer rate) {
-        this.rate = rate;
-    }
-
     public int getDistance() {
         return distance;
     }
 
     public void setDistance(int distance) {
         this.distance = distance;
-    }
-
-    public Bitmap getImage() {
-        return image;
     }
 
     public void setImage(Bitmap image) {

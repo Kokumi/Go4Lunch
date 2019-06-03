@@ -1,5 +1,8 @@
 package com.debruyckere.florian.go4lunch.Controller.Fragment;
 
+import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,8 +16,17 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
  */
 public class BaseFragment extends Fragment {
 
-    MaterialSearchView mMaterialSearchView;
+    protected MaterialSearchView mMaterialSearchView;
+    protected Context mContext;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(getActivity() != null)
+        mContext = getActivity().getApplicationContext();
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -24,5 +36,4 @@ public class BaseFragment extends Fragment {
         mMaterialSearchView.setMenuItem(item);
         super.onCreateOptionsMenu(menu, inflater);
     }
-
 }

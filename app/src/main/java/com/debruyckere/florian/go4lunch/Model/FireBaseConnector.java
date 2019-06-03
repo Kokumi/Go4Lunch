@@ -4,6 +4,7 @@ package com.debruyckere.florian.go4lunch.Model;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -18,13 +19,12 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.FetchPhotoResponse;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -40,7 +40,7 @@ import java.util.Map;
  */
 public class FireBaseConnector {
 
-    public void getColleague(OnCompleteListener pListener){
+    public void getColleague(OnCompleteListener<QuerySnapshot> pListener){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("Colleague")
@@ -93,7 +93,7 @@ public class FireBaseConnector {
                 .addOnCompleteListener(pCompleteListener);
     }
 
-    public void getWish(OnCompleteListener pListener){
+    public void getWish(OnCompleteListener<QuerySnapshot> pListener){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("Wish")
@@ -128,7 +128,7 @@ public class FireBaseConnector {
                 .addOnCompleteListener(pListener);
     }
 
-    public void getUserLocation(Context pContext, OnCompleteListener pListener){
+    public void getUserLocation(Context pContext, OnCompleteListener<Location> pListener){
         FusedLocationProviderClient FusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(pContext);
 
         if(ContextCompat.checkSelfPermission(pContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -138,7 +138,7 @@ public class FireBaseConnector {
     }
 
 
-    public void getRestaurantsData(OnCompleteListener pListener, Context pContext){
+    public void getRestaurantsData(OnCompleteListener<FindCurrentPlaceResponse> pListener, Context pContext){
         PlacesClient client = Places.createClient(pContext);
 
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID,Place.Field.NAME,Place.Field.LAT_LNG,
@@ -153,7 +153,7 @@ public class FireBaseConnector {
         }
     }
 
-    public void getRestaurantData(OnCompleteListener pListener, Context pContext,String pId){
+    public void getRestaurantData(OnCompleteListener<FetchPlaceResponse> pListener, Context pContext, String pId){
         PlacesClient client = Places.createClient(pContext);
 
         final List<Place.Field> placesFields= Arrays.asList(Place.Field.ID,Place.Field.NAME,Place.Field.LAT_LNG,
@@ -167,13 +167,15 @@ public class FireBaseConnector {
     public void getRestaurantPhoto(OnCompleteListener<FetchPhotoResponse> pListener, Context pContext, Place pPlaces){
         PlacesClient client = Places.createClient(pContext);
 
-        PhotoMetadata photoMetadata = pPlaces.getPhotoMetadatas().get(0);
-        //String attribution = photoMetadata.getAttributions();
+        if(pPlaces.getPhotoMetadatas() != null) {
+            PhotoMetadata photoMetadata = pPlaces.getPhotoMetadatas().get(0);
+            //String attribution = photoMetadata.getAttributions();
 
-        FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
-                .build();
+            FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                    .build();
 
-        client.fetchPhoto(photoRequest).addOnCompleteListener(pListener);
+            client.fetchPhoto(photoRequest).addOnCompleteListener(pListener);
+        }
     }
 
 }

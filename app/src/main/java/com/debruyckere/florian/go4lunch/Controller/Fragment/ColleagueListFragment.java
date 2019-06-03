@@ -64,7 +64,7 @@ public class ColleagueListFragment extends BaseFragment {
         return view;
     }
 
-    public OnCompleteListener getCompleteListener(){
+    private OnCompleteListener getCompleteListener(){
         return new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

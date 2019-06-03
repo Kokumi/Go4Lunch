@@ -1,6 +1,5 @@
 package com.debruyckere.florian.go4lunch.Controller.Fragment;
 
-import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,9 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -32,7 +28,6 @@ import java.util.ArrayList;
 public class RestaurantListFragment extends BaseFragment {
 
     private RecyclerView mRecycler;
-    private Context mContext;
     private Location mUserLocation;
     private ArrayList<Restaurant> mData;
 
@@ -53,9 +48,6 @@ public class RestaurantListFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getActivity() != null)
-        mContext = getActivity().getApplicationContext();
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -71,7 +63,6 @@ public class RestaurantListFragment extends BaseFragment {
         mRecycler = view.findViewById(R.id.list_recycler);
         mRecycler.setLayoutManager(new LinearLayoutManager(mContext));
         toolbarConfiguration(view);
-
 
         return view;
     }
@@ -117,7 +108,7 @@ public class RestaurantListFragment extends BaseFragment {
     }*/
 
 
-    public OnCompleteListener getListener() {
+    private OnCompleteListener<FindCurrentPlaceResponse> getListener() {
         return new OnCompleteListener<FindCurrentPlaceResponse>(){
             @Override
             public void onComplete(@NonNull Task<FindCurrentPlaceResponse> task) {
@@ -171,7 +162,7 @@ public class RestaurantListFragment extends BaseFragment {
             };
         }
 
-    public OnCompleteListener getDistanceListener(){
+    private OnCompleteListener<Location> getDistanceListener(){
         return  new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {

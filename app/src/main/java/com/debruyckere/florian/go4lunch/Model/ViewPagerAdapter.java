@@ -1,6 +1,5 @@
 package com.debruyckere.florian.go4lunch.Model;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,8 +13,6 @@ import com.debruyckere.florian.go4lunch.Controller.Fragment.RestaurantMapFragmen
  * Created by Debruyckère Florian on 04/01/2019.
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
-
-    private Context mContext;
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);

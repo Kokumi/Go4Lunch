@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.debruyckere.florian.go4lunch.Model.FireBaseConnector;
@@ -51,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void onClickParameter(){
+    private void onClickParameter(){
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     //--------------------------
 
 
-    public void startSignInActivity(){
+    private void startSignInActivity(){
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void signUpFirebase(){
+    private void signUpFirebase(){
         OnCompleteListener<QuerySnapshot> listener = new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

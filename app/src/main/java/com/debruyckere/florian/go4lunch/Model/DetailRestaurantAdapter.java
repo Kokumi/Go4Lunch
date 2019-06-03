@@ -24,7 +24,7 @@ import java.util.ArrayList;
  */
 public class DetailRestaurantAdapter extends RecyclerView.Adapter<DetailRestaurantAdapter.DetailRestaurantViewHolder> {
 
-    private ArrayList<Colleague> mData;
+    private final ArrayList<Colleague> mData;
 
     public DetailRestaurantAdapter(ArrayList<Colleague> pData){
         mData = pData;
@@ -53,9 +53,9 @@ public class DetailRestaurantAdapter extends RecyclerView.Adapter<DetailRestaura
 
     public class DetailRestaurantViewHolder extends RecyclerView.ViewHolder{
 
-        private ImageView mImageView;
-        private TextView mText;
-        private ProgressBar mProgressBar;
+        private final ImageView mImageView;
+        private final TextView mText;
+        private final ProgressBar mProgressBar;
 
         private DetailRestaurantViewHolder(View itemView) {
             super(itemView);
@@ -74,7 +74,7 @@ public class DetailRestaurantAdapter extends RecyclerView.Adapter<DetailRestaura
 
     static class userImageTask extends AsyncTask<String,Void, Drawable>{
 
-        WeakReference<ImageView> mImageReference;
+        final WeakReference<ImageView> mImageReference;
 
         private userImageTask(ImageView pImage){
             mImageReference = new WeakReference<>(pImage);

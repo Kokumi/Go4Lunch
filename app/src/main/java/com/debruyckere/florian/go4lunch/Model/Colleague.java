@@ -1,7 +1,5 @@
 package com.debruyckere.florian.go4lunch.Model;
 
-import android.media.Image;
-
 /**
  * Created by Debruyckère Florian on 02/01/2019.
  */
@@ -47,10 +45,6 @@ public class Colleague {
 
     public String getSurname() {
         return mSurname;
-    }
-
-    public void setSurname(String surname) {
-        this.mSurname = surname;
     }
 
     public String getPicture() {

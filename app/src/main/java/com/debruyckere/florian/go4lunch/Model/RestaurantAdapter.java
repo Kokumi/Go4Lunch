@@ -32,8 +32,8 @@ import java.util.Calendar;
  */
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.MyViewHolder> {
 
-    private ArrayList<Restaurant> data ;
-    private Context mContext;
+    private final ArrayList<Restaurant> data ;
+    private final Context mContext;
 
     public RestaurantAdapter(ArrayList<Restaurant> pData,Context pContext){
         data = pData;
@@ -66,11 +66,20 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        private FireBaseConnector mFireBase = new FireBaseConnector();
+        private final FireBaseConnector mFireBase = new FireBaseConnector();
         private Restaurant mRestaurant;
-        private TextView mName,mTypeAddress,mOpen,mDistance,mColleague;
-        private ImageView mRestaurantImage,mStar1,mStar2,mStar3,mStar4,mStar5;
-        private ProgressBar mProgressBar;
+        private final TextView mName;
+        private final TextView mTypeAddress;
+        private final TextView mOpen;
+        private final TextView mDistance;
+        private final TextView mColleague;
+        private final ImageView mRestaurantImage;
+        private final ImageView mStar1;
+        private final ImageView mStar2;
+        private final ImageView mStar3;
+        private final ImageView mStar4;
+        private final ImageView mStar5;
+        private final ProgressBar mProgressBar;
 
         private MyViewHolder(View itemView) {
             super(itemView);

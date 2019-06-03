@@ -161,7 +161,7 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
 
     static class userImageTask extends AsyncTask<String,Void, Drawable>{
 
-        private WeakReference<ImageView> mImageView;
+        private final WeakReference<ImageView> mImageView;
 
         private userImageTask(ImageView pImageView){
             mImageView = new WeakReference<>(pImageView);
@@ -202,7 +202,7 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
     }
 
 
-    public void configureAlarmManager(){
+    private void configureAlarmManager(){
         AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
 
         Calendar cal = Calendar.getInstance();

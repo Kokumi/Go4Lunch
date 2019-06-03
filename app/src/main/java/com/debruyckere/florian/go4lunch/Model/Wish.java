@@ -10,7 +10,6 @@ public class Wish {
     private Date mDate;
     private Colleague mColleague;
     private Restaurant mRestaurant;
-    private int restaurantId;
 
     public Wish(Date date, Colleague colleague, Restaurant restaurant) {
         mDate = date;
@@ -23,31 +22,11 @@ public class Wish {
         return mDate;
     }
 
-    public void setDate(Date date) {
-        mDate = date;
-    }
-
     public Colleague getColleague() {
         return mColleague;
     }
 
-    public void setColleague(Colleague colleague) {
-        mColleague = colleague;
-    }
-
     public Restaurant getRestaurant() {
         return mRestaurant;
-    }
-
-    public void setRestaurant(Restaurant restaurant) {
-        mRestaurant = restaurant;
-    }
-
-    public int getRestaurantId() {
-        return restaurantId;
-    }
-
-    public void setRestaurantId(int restaurantId) {
-        this.restaurantId = restaurantId;
     }
 }

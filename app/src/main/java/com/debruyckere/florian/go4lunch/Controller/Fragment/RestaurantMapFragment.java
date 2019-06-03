@@ -1,6 +1,5 @@
 package com.debruyckere.florian.go4lunch.Controller.Fragment;
 
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -50,7 +49,6 @@ import java.util.List;
 
 public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCallback {
 
-    private Context mContext;
     private ArrayList<MarkerOptions> mData;
     private GoogleMap mMap;
     private PlacesClient mPlacesClient ;
@@ -58,6 +56,7 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mLastKnowLocation;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 14;
+
 
 
     public RestaurantMapFragment() {
@@ -77,11 +76,10 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(getActivity() != null)
-        mContext = getActivity().getApplicationContext();
+        //mContext = getActivity().getApplicationContext();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
         mData = new ArrayList<>();
-        setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -109,10 +107,11 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
         return view;
     }
 
-    SearchView mSearchView;
+
 
     private void toolbarConfiguration(View view){
         Toolbar toolbar = view.findViewById(R.id.fragment_map_toolbar);
+        SearchView searchView;
 
         if(getActivity() != null){
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -120,8 +119,8 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("restaurant map");
         }
 
-        mSearchView = view.findViewById(R.id.fragment_searcht);
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView = view.findViewById(R.id.fragment_searcht);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -183,7 +182,6 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults){
-//String permissions[]
         mLocationPermissionGranted = false;
 
         if(requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
@@ -242,7 +240,7 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
         getPlaces();
     }
 
-    public void getPlaces(){
+    private void getPlaces(){
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID,Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.TYPES);
 
         FindCurrentPlaceRequest currentRequest = FindCurrentPlaceRequest.builder(placeFields)

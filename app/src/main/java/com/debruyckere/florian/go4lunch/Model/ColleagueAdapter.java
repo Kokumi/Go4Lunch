@@ -30,8 +30,8 @@ import java.util.Calendar;
  */
 public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.ColleagueViewHolder> {
 
-    private ArrayList<Colleague> mData;
-    private Context mContext;
+    private final ArrayList<Colleague> mData;
+    private final Context mContext;
 
     public ColleagueAdapter(ArrayList<Colleague> pData, Context pContext){
         mData = pData;
@@ -60,8 +60,8 @@ public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.Coll
     }
 
     public class ColleagueViewHolder extends RecyclerView.ViewHolder{
-        private TextView mTextView;
-        private ImageView mImageView;
+        private final TextView mTextView;
+        private final ImageView mImageView;
 
         private ColleagueViewHolder(View itemView) {
             super(itemView);
@@ -111,7 +111,7 @@ public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.Coll
     static class ColleagueImageTask extends AsyncTask<String,Void, Drawable>{
 
         //ImageView mImageView;
-        private WeakReference<ImageView> mImageView;
+        private final WeakReference<ImageView> mImageView;
 
         private ColleagueImageTask(ImageView pImageView){
             mImageView = new WeakReference<>(pImageView);
