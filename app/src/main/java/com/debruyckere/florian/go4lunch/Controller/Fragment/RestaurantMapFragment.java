@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.Toolbar;
@@ -31,7 +30,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -44,7 +42,6 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +53,6 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
     private Context mContext;
     private ArrayList<MarkerOptions> mData;
     private GoogleMap mMap;
-    private ArrayList<Marker> mMarkerList = new ArrayList<>();
     private PlacesClient mPlacesClient ;
     private Boolean mLocationPermissionGranted=false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -123,24 +119,6 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
             if(((AppCompatActivity) getActivity()).getSupportActionBar() != null)
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("restaurant map");
         }
-        /*mMaterialSearchView = view.findViewById(R.id.fragment_map_search);
-        mMaterialSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {return false;}
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if(newText != null && !newText.isEmpty()) {
-                    for (MarkerOptions marker : mData)
-                        if (marker.getTitle().contains(newText))
-                            mMap.addMarker(marker);
-                }else
-                    for(MarkerOptions marker : mData)
-                        mMap.addMarker(marker);
-
-                return true;
-            }
-        });*/
 
         mSearchView = view.findViewById(R.id.fragment_searcht);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -153,15 +131,15 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
             public boolean onQueryTextChange(String newText) {
                 if(newText != null && !newText.isEmpty()) {
                     mMap.clear();
-                    mMarkerList.clear();
                     for (MarkerOptions marker : mData) {
-                        if (marker.getTitle().contains(newText))
-                            Log.i("Search", "TextChanged! " + newText);
-                            mMarkerList.add(mMap.addMarker(marker));
+                        if (marker.getTitle().contains(newText)) {
+                            mMap.addMarker(marker);
+                        }
+
                     }
                 }else
                     for(MarkerOptions marker : mData)
-                        mMarkerList.add(mMap.addMarker(marker));
+                        mMap.addMarker(marker);
 
                 return true;
             }
@@ -247,7 +225,6 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
                             mLastKnowLocation = (Location) task.getResult();
                             mMap.moveCamera(CameraUpdateFactory.newLatLng(
                                     new LatLng(mLastKnowLocation.getLatitude(),mLastKnowLocation.getLongitude())
-                                    //new LatLng(50.701892,3.134505)
                                     ));
                             mMap.setMinZoomPreference(16f);
                         }else {
@@ -304,7 +281,7 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
                                                     .snippet(placeLikelihood.getPlace().getTypes().get(0).toString());
                                         }
                                         mData.add(marker);
-                                        mMarkerList.add( mMap.addMarker(marker));
+                                        mMap.addMarker(marker);
                                     }
                                 }
                             },placeLikelihood.getPlace().getAddress());

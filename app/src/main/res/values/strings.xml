@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Go4Lunch</string>
 
-
+    <string name="twitter_consumer_key" translatable="false">OeoQLBq8dc5ohgjpJUwG0jkdJ</string>
+    <string name="twitter_consumer_secret" translatable="false">27SIRgiGaLoznlfxcj2Ylte4McbUDuSR2F8mQveLPDLCoaDKZU</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
