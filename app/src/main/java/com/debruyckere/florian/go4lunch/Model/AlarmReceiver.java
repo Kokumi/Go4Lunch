@@ -36,6 +36,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         Log.i("ALARM MANAGER","ALARM RECEPTION");
     }
 
+    /**
+     * build the notification
+     * @param pName name of the restaurant wished by the user
+     * @return notification
+     */
     private NotificationCompat.Builder notificationBuilder(String pName){
         return new NotificationCompat.Builder(mContext,CHANNEL_ID)
                 .setContentTitle("Your lunch")
@@ -44,6 +49,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
     }
 
+    /**
+     * get the user wish of the day and notify the name
+     */
     private void getWishData(){
         final NotificationManagerCompat nMC= NotificationManagerCompat.from(mContext);
 
@@ -59,8 +67,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                             new FireBaseConnector().getRestaurantData(new OnCompleteListener<FetchPlaceResponse>() {
                                 @Override
                                 public void onComplete(@NonNull Task<FetchPlaceResponse> task) {
+                                    //check if the place wished exist
                                     if(task.getResult() != null){
-
                                         nMC.notify(0,notificationBuilder(task.getResult().getPlace().getName()).build());
                                         mGoSomewhere = true;
 
@@ -77,6 +85,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
         }, FirebaseAuth.getInstance().getCurrentUser().getUid());
 
+        //check if the user have a wish
         if(!mGoSomewhere)
             nMC.notify(0,notificationBuilder("nowhere").build());
     }

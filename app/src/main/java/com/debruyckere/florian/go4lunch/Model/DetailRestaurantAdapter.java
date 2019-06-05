@@ -72,6 +72,9 @@ public class DetailRestaurantAdapter extends RecyclerView.Adapter<DetailRestaura
         }
     }
 
+    /**
+     * task to download the user image
+     */
     static class userImageTask extends AsyncTask<String,Void, Drawable>{
 
         final WeakReference<ImageView> mImageReference;

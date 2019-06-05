@@ -21,6 +21,9 @@ public class SettingActivity extends AppCompatActivity {
         configureSwitch();
     }
 
+    /**
+     * configure the switch to enable/disable notification
+     */
     private void configureSwitch(){
         mSwitch = findViewById(R.id.setting_switch);
 

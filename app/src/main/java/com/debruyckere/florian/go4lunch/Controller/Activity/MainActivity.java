@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.debruyckere.florian.go4lunch.Model.FireBaseConnector;
@@ -22,9 +20,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Arrays;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class MainActivity extends AppCompatActivity {
 
     //go4lunch-3b9d8
@@ -32,41 +27,24 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-    @BindView(R.id.main_login_button)Button mLoginButton ;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ButterKnife.bind(this);
-
         mAuth=FirebaseAuth.getInstance();
 
-        mLoginButton = findViewById(R.id.main_login_button);
+        startSignInActivity();
 
-
-        onClickParameter();
-
-    }
-
-    private void onClickParameter(){
-
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startSignInActivity();
-            }
-        });
-
-        //mTwitterLoginButton.setCallback
     }
 
     //--------------------------
     // Firebase authentication
     //--------------------------
 
-
+    /**
+     * Start Activity to authentication
+     */
     private void startSignInActivity(){
         startActivityForResult(
                 AuthUI.getInstance()
@@ -74,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAvailableProviders(
                                 Arrays.asList(
                                         new AuthUI.IdpConfig.GoogleBuilder().build(), // SUPPORT GOOGLE
-                                        new AuthUI.IdpConfig.TwitterBuilder().build()
+                                        new AuthUI.IdpConfig.TwitterBuilder().build() // SUPPORT TWITTER
                                 ))
                         .setIsSmartLockEnabled(true)
                         .build(),
@@ -88,13 +66,17 @@ public class MainActivity extends AppCompatActivity {
         this.handleResponseAfterSignIn(requestCode,resultCode,data);
     }
 
-
+    /**
+     * Authenticate the user
+     * @param requestCode code of activity's request
+     * @param resultCode  code result of the activity
+     * @param data intent of data
+     */
     private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data){
         IdpResponse response = IdpResponse.fromResultIntent(data);
 
         if(requestCode == RC_SIGN_IN){
             if(resultCode == RESULT_OK){
-                //mText.setText("Welcome "+mAuth.getCurrentUser().getEmail());
                 signUpFirebase();
                 nextScreen();
             } else {
@@ -113,6 +95,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Verify if is a new application user
+     */
     private void signUpFirebase(){
         OnCompleteListener<QuerySnapshot> listener = new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -124,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                             alreadySignIn = true;
 
                     }
+                    // Verify if it's a new user
                     if(!alreadySignIn){
                         new FireBaseConnector().registerColleague(new OnCompleteListener<Void>() {
                             @Override
@@ -146,6 +132,9 @@ public class MainActivity extends AppCompatActivity {
         FBC.getColleague(listener);
     }
 
+    /**
+     * launch the next screen
+     */
     private void nextScreen(){
         Intent intent = new Intent(this,appActivity.class);
         startActivity(intent);

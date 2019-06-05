@@ -67,6 +67,14 @@ public class RestaurantListFragment extends BaseFragment {
         return view;
     }
 
+    //------------------
+    // TOOLBAR
+    //------------------
+
+    /**
+     * configure the toolbar
+     * @param view view of the fragment
+     */
     private void toolbarConfiguration(View view){
         Toolbar toolbar = view.findViewById(R.id.fragment_toolbar);
 
@@ -75,6 +83,10 @@ public class RestaurantListFragment extends BaseFragment {
             if(((AppCompatActivity) getActivity()).getSupportActionBar() != null)
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("restaurant List");
         }
+
+        //--------
+        // SEARCH
+        //--------
         mMaterialSearchView = view.findViewById(R.id.fragment_search);
         mMaterialSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
@@ -107,7 +119,14 @@ public class RestaurantListFragment extends BaseFragment {
         super.onCreateOptionsMenu(menu, inflater);
     }*/
 
+    //------
+    // DATA
+    //------
 
+    /**
+     * get listener to retrieve nearby restaurant's data
+     * @return the restaurant
+     */
     private OnCompleteListener<FindCurrentPlaceResponse> getListener() {
         return new OnCompleteListener<FindCurrentPlaceResponse>(){
             @Override
@@ -150,7 +169,7 @@ public class RestaurantListFragment extends BaseFragment {
                         }
                     }
                     //---------------------
-                    //Set Adapter with Data
+                    //Set Adapter with data
                     mData = data;
                     mRecycler.setAdapter(new RestaurantAdapter(data,mContext));
                 }
@@ -162,6 +181,10 @@ public class RestaurantListFragment extends BaseFragment {
             };
         }
 
+    /**
+     * get listener to retrieve distance between user and restaurant
+     * @return the listener
+     */
     private OnCompleteListener<Location> getDistanceListener(){
         return  new OnCompleteListener<Location>() {
             @Override

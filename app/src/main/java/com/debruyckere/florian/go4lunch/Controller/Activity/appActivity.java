@@ -60,6 +60,13 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
         configureAlarmManager();
     }
 
+    //---------------
+    // VIEW PAGER
+    //---------------
+
+    /**
+     * configure the view pager
+     */
     private void configureViewPager(){
         ViewPager pager = findViewById(R.id.app_viewpager);
 
@@ -72,6 +79,13 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
         tabs.setTabMode(TabLayout.MODE_FIXED);
     }
 
+    //------------------
+    // NAVIGATION DRAWER
+    //------------------
+
+    /**
+     * configure the navigation drawer
+     */
     private void configureNavigationDrawer(){
         NavigationView mNavigationView = findViewById(R.id.app_navigation);
         View headerView = mNavigationView.getHeaderView(0);
@@ -83,6 +97,7 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
         TextView tEmail = headerView.findViewById(R.id.drawer_email);
         ImageView userImage = headerView.findViewById(R.id.drawer_image);
 
+        // Get user Data
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if(currentUser != null) {
@@ -93,6 +108,11 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
 
     }
 
+    /**
+     * configure buttons of the navigation drawer
+     * @param item buttons selected
+     * @return it's true
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -134,11 +154,13 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
             },FirebaseAuth.getInstance().getCurrentUser().getUid());
                 break;
 
+                // go to setting screen
             case R.id.drawer_settings:
                 Intent settingIntent = new Intent(this,SettingActivity.class);
                 startActivity(settingIntent);
                 break;
 
+                //logout
             case R.id.drawer_logout:
                 FirebaseAuth.getInstance().signOut();
                 finish();
@@ -151,6 +173,9 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
         return true;
     }
 
+    /**
+     * close drawer if it open
+     */
     @Override
     public void onBackPressed() {
         if(mDrawer.isDrawerOpen(GravityCompat.START))
@@ -159,6 +184,9 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
         super.onBackPressed();
     }
 
+    /**
+     * Task to get the current user's image
+     */
     static class userImageTask extends AsyncTask<String,Void, Drawable>{
 
         private final WeakReference<ImageView> mImageView;
@@ -187,6 +215,13 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+    //-----------------
+    // NOTIFICATION
+    //-----------------
+
+    /**
+     * create the Channel for notification
+     */
     private void createNotificationChannel(){
         if(Build.VERSION.SDK_INT >= 26) {
             CharSequence name = "Go4Lunch notification";
@@ -202,6 +237,9 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
     }
 
 
+    /**
+     * configure the notification if it enable
+     */
     private void configureAlarmManager(){
         AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
 
@@ -209,13 +247,14 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
         cal.setTimeInMillis(System.currentTimeMillis());
         //cal.set(Calendar.HOUR,12);               //alarm set to active at 12 hour
         //cal.set(Calendar.MINUTE,0);
-        cal.add(Calendar.MINUTE,1);
+        cal.add(Calendar.MINUTE,1); //for test
         cal.set(Calendar.SECOND,0);
         Log.i("ALARM MANAGER","alarm set for: "+cal.getTime());
 
         PendingIntent pi = PendingIntent.getBroadcast(this,1,new Intent(this, AlarmReceiver.class),PendingIntent.FLAG_UPDATE_CURRENT);
         SharedPreferences preferences = getSharedPreferences("notificationSet",MODE_PRIVATE);
 
+        //verify if notification is enable
         if(preferences.getBoolean("notification",false) && alarm != null){
             alarm.setRepeating(AlarmManager.RTC_WAKEUP,cal.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pi);
             Log.i("ALARM MANAGER","alarm activate");

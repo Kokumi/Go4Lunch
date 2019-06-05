@@ -76,7 +76,6 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //mContext = getActivity().getApplicationContext();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
         mData = new ArrayList<>();
 
@@ -91,6 +90,7 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
         Places.initialize(mContext,"AIzaSyCJsENv9ksTlY-n1rjZxFW412I64aVqbvc");
         mPlacesClient = Places.createClient(mContext);
 
+        //create map
         MapView mapView = view.findViewById(R.id.fragment_mapView);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
@@ -107,8 +107,14 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
         return view;
     }
 
+    //-----------
+    // TOOLBAR
+    //-----------
 
-
+    /**
+     * configure toolbar
+     * @param view view of the fragment
+     */
     private void toolbarConfiguration(View view){
         Toolbar toolbar = view.findViewById(R.id.fragment_map_toolbar);
         SearchView searchView;
@@ -119,6 +125,9 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("restaurant map");
         }
 
+        //-------
+        //SEARCH
+        //-------
         searchView = view.findViewById(R.id.fragment_searcht);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -149,11 +158,16 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if(getActivity() != null)
         getActivity().getMenuInflater().inflate(R.menu.actionbar_menu,menu);
-        //MenuItem item = menu.findItem(R.id.action_search);
-        //mMaterialSearchView.setMenuItem(item);
-        //super.onCreateOptionsMenu(menu, inflater);
     }
 
+    //----------
+    // MAP
+    //----------
+
+    /**
+     * add data to map when it ready
+     * @param googleMap the map
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -163,6 +177,9 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
 
     }
 
+    /**
+     * check if the location permission is granted
+     */
     private void getLocationPermission(){
         if (ContextCompat.checkSelfPermission(mContext,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -178,6 +195,12 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
 
     }
 
+    /**
+     * execute when the location permission request is finish
+     * @param requestCode code of the request
+     * @param permissions permission requested
+     * @param grantResults result
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
@@ -193,6 +216,9 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
 
     }
 
+    /**
+     * configure map according to location permission
+     */
     private void updateLocationUI(){
         if(mMap == null){
             return;
@@ -211,8 +237,10 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
         }
     }
 
+    /**
+     * move the map according to user location and set zoom preferences
+     */
     private void getDeviceLocation(){
-
         try{
             if(mLocationPermissionGranted){
                 Task locationResult = mFusedLocationProviderClient.getLastLocation();
@@ -240,6 +268,9 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
         getPlaces();
     }
 
+    /**
+     * get places nearby user's location and add marker
+     */
     private void getPlaces(){
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID,Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.TYPES);
 
@@ -265,6 +296,8 @@ public class RestaurantMapFragment extends BaseFragment implements OnMapReadyCal
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     if(task.getResult() != null){
                                         MarkerOptions marker;
+
+                                        //check if the current restaurant is wished
                                         if(task.getResult().size() > 0){
                                             marker = new MarkerOptions()
                                                     .position(placeLikelihood.getPlace().getLatLng())

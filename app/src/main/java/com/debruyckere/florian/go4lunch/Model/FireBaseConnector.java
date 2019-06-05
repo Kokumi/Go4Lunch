@@ -40,6 +40,10 @@ import java.util.Map;
  */
 public class FireBaseConnector {
 
+    /**
+     * get all colleague
+     * @param pListener listener to handle answer
+     */
     public void getColleague(OnCompleteListener<QuerySnapshot> pListener){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -47,6 +51,12 @@ public class FireBaseConnector {
                 .get()
                 .addOnCompleteListener(pListener);
     }
+
+    /**
+     * search a colleague by it's ID
+     * @param pListener listener to handle answer
+     * @param pId ID of the wanted colleague
+     */
     public void getColleagueById(OnCompleteListener<DocumentSnapshot> pListener, String pId){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -55,6 +65,12 @@ public class FireBaseConnector {
                 .addOnCompleteListener(pListener);
     }
 
+    /**
+     * add wish to database
+     * @param pCompleteListener listener to handle answer
+     * @param pFailListener listener to handle failure
+     * @param pWish wish to added
+     */
     public void addWish(OnSuccessListener<DocumentReference> pCompleteListener, OnFailureListener pFailListener, Wish pWish){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String,Object> wish = new HashMap<>();
@@ -69,6 +85,12 @@ public class FireBaseConnector {
                 .addOnFailureListener(pFailListener);
     }
 
+    /**
+     * add Like to Database
+     * @param pCompleteListener listener to handle answer
+     * @param pColleagueId colleague's Id who liked
+     * @param pRestaurantId restaurant's id liked
+     */
     public void addLike(OnCompleteListener<DocumentReference> pCompleteListener,String pColleagueId, String pRestaurantId){
         FirebaseFirestore db =FirebaseFirestore.getInstance();
 
@@ -81,6 +103,13 @@ public class FireBaseConnector {
                 .addOnCompleteListener(pCompleteListener);
     }
 
+    /**
+     * register new user
+     * @param pCompleteListener listener to handle answer
+     * @param pName user's name
+     * @param pId user's Id
+     * @param pPhotoUri user's Photo URI
+     */
     public void registerColleague(OnCompleteListener<Void> pCompleteListener, String pName, String pId, String pPhotoUri){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -93,6 +122,10 @@ public class FireBaseConnector {
                 .addOnCompleteListener(pCompleteListener);
     }
 
+    /**
+     * Get all Wish
+     * @param pListener listener to handle answer
+     */
     public void getWish(OnCompleteListener<QuerySnapshot> pListener){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -101,6 +134,11 @@ public class FireBaseConnector {
                 .addOnCompleteListener(pListener);
     }
 
+    /**
+     * search wish of a colleague
+     * @param pListener listener to handle answer
+     * @param pId colleague's ID
+     */
     public void GetWishOfColleague(OnCompleteListener<QuerySnapshot> pListener, String pId){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -110,6 +148,11 @@ public class FireBaseConnector {
                 .addOnCompleteListener(pListener);
     }
 
+    /**
+     * search wish about a restaurant
+     * @param pListener listener to handle answer
+     * @param pAddress restaurant's address
+     */
     public void getWishByAddress(OnCompleteListener<QuerySnapshot> pListener, String pAddress){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -119,6 +162,11 @@ public class FireBaseConnector {
                 .addOnCompleteListener(pListener);
     }
 
+    /**
+     * search Like of a colleague
+     * @param pListener listener to handle answer
+     * @param pColleagueId colleague's ID
+     */
     public void getLike(OnCompleteListener<QuerySnapshot> pListener, String pColleagueId){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -128,6 +176,11 @@ public class FireBaseConnector {
                 .addOnCompleteListener(pListener);
     }
 
+    /**
+     * get User's Location
+     * @param pContext Context needed
+     * @param pListener listener to handle answer
+     */
     public void getUserLocation(Context pContext, OnCompleteListener<Location> pListener){
         FusedLocationProviderClient FusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(pContext);
 
@@ -137,7 +190,11 @@ public class FireBaseConnector {
         }
     }
 
-
+    /**
+     * get Data of all nearby places
+     * @param pListener listener to handle answer
+     * @param pContext Context needed
+     */
     public void getRestaurantsData(OnCompleteListener<FindCurrentPlaceResponse> pListener, Context pContext){
         PlacesClient client = Places.createClient(pContext);
 
@@ -153,6 +210,12 @@ public class FireBaseConnector {
         }
     }
 
+    /**
+     * Search Data of one place
+     * @param pListener listener to handle answer
+     * @param pContext Context needed
+     * @param pId place's ID
+     */
     public void getRestaurantData(OnCompleteListener<FetchPlaceResponse> pListener, Context pContext, String pId){
         PlacesClient client = Places.createClient(pContext);
 
@@ -164,6 +227,12 @@ public class FireBaseConnector {
         client.fetchPlace(request).addOnCompleteListener(pListener);
     }
 
+    /**
+     * search the photo of a place
+     * @param pListener listener to handle answer
+     * @param pContext Context needed
+     * @param pPlaces place
+     */
     public void getRestaurantPhoto(OnCompleteListener<FetchPhotoResponse> pListener, Context pContext, Place pPlaces){
         PlacesClient client = Places.createClient(pContext);
 

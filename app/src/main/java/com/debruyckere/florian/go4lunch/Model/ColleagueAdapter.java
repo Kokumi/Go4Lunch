@@ -44,13 +44,11 @@ public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.Coll
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.colleague_cell,parent,false);
 
-
         return new ColleagueViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ColleagueViewHolder holder, int position) {
-
         holder.display(mData.get(position));
     }
 
@@ -80,6 +78,14 @@ public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.Coll
             new ColleagueImageTask(mImageView).execute(param.getPicture());
         }
 
+        //------------------------
+        // LISTENER AND ASYNC TASK
+        //------------------------
+
+        /**
+         * get the listener to check if the user go somewhere
+         * @return the query listener
+         */
         private OnCompleteListener<QuerySnapshot> RestaurantListener(){
             return new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -88,13 +94,14 @@ public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.Coll
                     if( task.getResult() != null){
                         for(DocumentSnapshot document : task.getResult()){
                             if(document.get("date") == Calendar.getInstance().getTime()){
+                                //if he wished to go somewhere
                                 hadChoice = true;
                                 new FireBaseConnector().getRestaurantData(new OnCompleteListener<FetchPlaceResponse>(){
                                     @Override
                                     public void onComplete(@NonNull Task<FetchPlaceResponse> task) {
                                         if(task.getResult() != null){
+                                            //retrieve the restaurant where he go
                                             mTextView.setText(new StringBuilder(mTextView.getText()+ " want go to " + task.getResult().getPlace().getName()));
-
                                         }
                                     }
                                 },mContext,document.get("RestaurantId").toString());
@@ -108,6 +115,10 @@ public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.Coll
         }
 
     }
+
+    /**
+     * Task to download the user image
+     */
     static class ColleagueImageTask extends AsyncTask<String,Void, Drawable>{
 
         //ImageView mImageView;

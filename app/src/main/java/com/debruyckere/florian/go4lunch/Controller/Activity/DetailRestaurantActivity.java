@@ -74,12 +74,18 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         buttonParameter();
     }
 
+    /**
+     * show data of the current restaurant
+     */
     private void display(){
         mTitle.setText(mRestaurant.getName());
         mTypeAddress.setText(new StringBuilder(mRestaurant.getType()+" - "+mRestaurant.getAddress()));
         mProgressBar.setVisibility(View.GONE);
     }
 
+    /**
+     * configure buttons
+     */
     private void buttonParameter(){
         //add Wish button
         mValidationButton.setOnClickListener(new View.OnClickListener() {
@@ -107,6 +113,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
             }
         });
 
+        //configure button for call
         mCallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,6 +123,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
             }
         });
 
+        //configure like button
         mLikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,6 +139,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
             }
         });
 
+        //configure website button
         mWebsiteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,6 +166,8 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<FetchPlaceResponse> task) {
                         if(task.isSuccessful() && task.getResult() != null){
                             AddressComponents aC = task.getResult().getPlace().getAddressComponents();
+
+                            //get opening hours
                             String openHour= "not this day";
                             if(task.getResult().getPlace().getOpeningHours()!= null) {
                                 for (Period p : task.getResult().getPlace().getOpeningHours().getPeriods()) {
@@ -167,6 +178,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                                 }
                             }
 
+                            //get id, name,address, type, rating
                             if(aC != null && task.getResult().getPlace().getTypes() != null)
                                 mRestaurant = new Restaurant(task.getResult().getPlace().getId(),
                                         task.getResult().getPlace().getName(),
@@ -175,16 +187,20 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                                         openHour,
                                         task.getResult().getPlace().getUserRatingsTotal());
 
+                            //get phone number
                             if(task.getResult().getPlace().getPhoneNumber()!=null)
                                 mRestaurant.setPhoneNumber(task.getResult().getPlace().getPhoneNumber());
+                            //get website url
                             if(task.getResult().getPlace().getWebsiteUri()!= null)
                                 mRestaurant.setWebUri(task.getResult().getPlace().getWebsiteUri());
 
+                            //get photo
                             new FireBaseConnector().getRestaurantPhoto(getPhotoListener(),getApplicationContext(),task.getResult().getPlace());
 
                             display();
                             getColleagueData();
 
+                            //check if the user already liked the current restaurant
                             if(FirebaseAuth.getInstance().getCurrentUser() != null)
                                 new FireBaseConnector().getLike(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
@@ -208,6 +224,10 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                 }, this, pId);
     }
 
+    /**
+     * get listener to retrieve the photo of the current restaurant
+     * @return
+     */
     private OnCompleteListener<FetchPhotoResponse> getPhotoListener(){
         return new OnCompleteListener<FetchPhotoResponse>() {
             @Override
@@ -222,20 +242,22 @@ public class DetailRestaurantActivity extends AppCompatActivity {
     }
 
     /**
-     * get colleague who wish to go in this restaurant
+     * get colleague who wish to go in the current restaurant
      */
     private void getColleagueData(){
         final FireBaseConnector FBC = new FireBaseConnector();
-        //step1: Get ID from wish with @
+        //step1: Get ID from wish by restaurant's address
         FBC.getWishByAddress(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.getResult() != null){
                     for(QueryDocumentSnapshot document : task.getResult()){
 
+                        //check if it's the current day
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                         if(dateFormat.format(document.getDate("date")).equals(dateFormat.format(Calendar.getInstance().getTime()))) {
 
+                            //check if it's a current user's today wish
                             if(FirebaseAuth.getInstance().getCurrentUser() != null &&
                                     document.getData().get("colleagueId").toString().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
                                 mValidationButton.setImageResource(R.drawable.ic_success_icon);
@@ -244,8 +266,6 @@ public class DetailRestaurantActivity extends AppCompatActivity {
 
                                 FBC.getColleagueById(getColleagueListener(), colleagueId);
                             }
-
-
                         }
                     }
                 }else{
@@ -291,6 +311,10 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         };
     }
 
+    /**
+     * configure the colleague recycler view
+     * @param pData data of colleagues
+     */
     private void RecyclerParameter(ArrayList<Colleague> pData){
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(new DetailRestaurantAdapter(pData));

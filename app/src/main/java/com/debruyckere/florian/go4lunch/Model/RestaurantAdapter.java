@@ -46,7 +46,6 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.restaurant_cell,parent,false);
 
-
         return new MyViewHolder(view);
     }
 
@@ -116,6 +115,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
             mFireBase.getWish(getWishListener(pRest));
             mFireBase.getRestaurantData(getPlaceCompleteListener(),mContext,pRest.getId());
 
+            //set rate of the restaurant
             switch(pRest.getRate()){
                 case 1:mStar1.setVisibility(View.VISIBLE);
                     break;
@@ -140,6 +140,15 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
             }
         }
 
+        //----------
+        // LISTENER
+        //----------
+
+        /**
+         * get the listener to get the number of wish this restaurant have
+         * @param pRest this restaurant
+         * @return the listener
+         */
         private OnCompleteListener<QuerySnapshot> getWishListener(final Restaurant pRest){
 
             return new OnCompleteListener<QuerySnapshot>() {
@@ -164,6 +173,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
             };
         }
 
+        /**
+         * get the listener to retrieve all data about this restaurant
+         * @return the listener
+         */
         private OnCompleteListener<FetchPlaceResponse> getPlaceCompleteListener(){
 
             return new OnCompleteListener<FetchPlaceResponse>() {
@@ -172,8 +185,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
                     if(task.isSuccessful() && task.getResult()!= null){
                         if(task.getResult().getPlace().getOpeningHours() != null) {
 
+                            //get Opening hours
                             OpeningHours oH = task.getResult().getPlace().getOpeningHours();
-                            //Log.i("oH Weekday",oH.getWeekdayText().get(0));
 
                             for(Period p : oH.getPeriods()){
                                 if(p.getClose()!=null && p.getClose().getTime().getHours() <= 19 &&
@@ -201,6 +214,10 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
             };
         }
 
+        /**
+         * get the listener to retrieve the first photo of the restaurant
+         * @return the listener
+         */
         private OnCompleteListener<FetchPhotoResponse> getPhotoListener(){
             return new OnCompleteListener<FetchPhotoResponse>(){
                 @Override
