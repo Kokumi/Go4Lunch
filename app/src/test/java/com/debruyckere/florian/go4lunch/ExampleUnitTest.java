@@ -3,14 +3,15 @@ package com.debruyckere.florian.go4lunch;
 import android.content.Context;
 
 import com.debruyckere.florian.go4lunch.Model.Colleague;
-import com.debruyckere.florian.go4lunch.Model.FireBaseConnector;
+import com.debruyckere.florian.go4lunch.Model.Restaurant;
+import com.debruyckere.florian.go4lunch.Model.Wish;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 
 import static org.junit.Assert.*;
 
@@ -21,11 +22,18 @@ public class ExampleUnitTest {
     Context mMockContext;
 
     @Test
-    public void ColleagueDatabaseTest(){
+    public void ColleagueTest(){
+        Colleague test = new Colleague("07","test");
 
-        FireBaseConnector fBC = new FireBaseConnector(mMockContext);
-        ArrayList<Colleague> toTest = fBC.getColleagues();
+        assertSame(test.getId(),"07");
+    }
 
-        assertSame(toTest.get(0).getName(),"Test");
+    @Test
+    public void wishTest(){
+        Wish test = new Wish(Calendar.getInstance().getTime(),
+                new Colleague("07","test"),
+                new Restaurant("01","home","12 test","restaurant","notime",0));
+
+        assertSame(test.getRestaurant().getId(),"01");
     }
 }

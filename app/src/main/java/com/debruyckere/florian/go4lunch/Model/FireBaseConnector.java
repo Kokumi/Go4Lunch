@@ -67,11 +67,11 @@ public class FireBaseConnector {
 
     /**
      * add wish to database
-     * @param pCompleteListener listener to handle answer
+     * @param pSuccessListener listener to handle success
      * @param pFailListener listener to handle failure
      * @param pWish wish to added
      */
-    public void addWish(OnSuccessListener<DocumentReference> pCompleteListener, OnFailureListener pFailListener, Wish pWish){
+    public void addWish(OnSuccessListener<DocumentReference> pSuccessListener, OnFailureListener pFailListener, Wish pWish){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String,Object> wish = new HashMap<>();
         wish.put("colleagueId",pWish.getColleague().getId());
@@ -81,7 +81,7 @@ public class FireBaseConnector {
 
         db.collection("Wish")
                 .add(wish)
-                .addOnSuccessListener(pCompleteListener)
+                .addOnSuccessListener(pSuccessListener)
                 .addOnFailureListener(pFailListener);
     }
 

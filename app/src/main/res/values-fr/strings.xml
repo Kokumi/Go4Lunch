@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Go4Lunch</string>
+    <string name="actionbar_search">Recherche</string>
+    <string name="detail_colleague_description_image">Image du colleague</string>
+    <string name="detail_description_call">Appel</string>
+    <string name="detail_description_like">Aime</string>
+    <string name="detail_description_validation_button">Valider votre choix</string>
+    <string name="detail_description_website">Site web</string>
+    <string name="detail_title">Titre</string>
+    <string name="detail_type_address">Type-Adresse</string>
+    <string name="drawer_header">Go4Lunch</string>
+    <string name="drawer_image_description">Image de l\'utilisateur</string>
+    <string name="drawer_logout">Deconnexion</string>
+    <string name="drawer_lunch">Votre déjeuner</string>
+    <string name="drawer_setting">Réglage</string>
+    <string name="drawer_user_email">E-mail</string>
+    <string name="drawer_user_name">Utilisateur</string>
+    <string name="main_login">Connexion</string>
+    <string name="restaurant_cell_colleague">Choix:</string>
+    <string name="restaurant_cell_description_image">Image du restaurant</string>
+    <string name="restaurant_cell_description_rate">évaluation</string>
+    <string name="restaurant_cell_distance">Distance</string>
+    <string name="restaurant_cell_name">Nom</string>
+    <string name="restaurant_cell_open">Ouverture</string>
+    <string name="restaurant_cell_type_address">Type-Adresse</string>
+    <string name="setting_explanation">Vous recevrez une notification chaque jour à midi qui vous informera où vous voulez déjeuner ce jour</string>
+    <string name="setting_notification_text">Notification</string>
+    <string name="toolbar_map_title">Carte</string>
+</resources>
