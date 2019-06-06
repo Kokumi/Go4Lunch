@@ -27,4 +27,5 @@
     <string name="setting_explanation">Vous recevrez une notification chaque jour à midi qui vous informera où vous voulez déjeuner ce jour</string>
     <string name="setting_notification_text">Notification</string>
     <string name="toolbar_map_title">Carte</string>
+    <string name="toolbar_list_title">Liste</string>
 </resources>

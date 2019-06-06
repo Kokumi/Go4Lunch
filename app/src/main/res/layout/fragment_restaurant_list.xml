@@ -13,6 +13,19 @@
         android:background="@color/colorPrimary"
         >
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/toolbar_list_title"
+            android:layout_marginTop="10dp"
+            android:textSize="25sp"
+            android:textColor="#000000"/>
+
+        <SearchView
+            android:id="@+id/fragment_searcht"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"/>
 
     </android.support.v7.widget.Toolbar>
 

@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -77,6 +78,7 @@ public class RestaurantListFragment extends BaseFragment {
      */
     private void toolbarConfiguration(View view){
         Toolbar toolbar = view.findViewById(R.id.fragment_toolbar);
+        SearchView searchView;
 
         if(getActivity() != null){
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -87,8 +89,9 @@ public class RestaurantListFragment extends BaseFragment {
         //--------
         // SEARCH
         //--------
-        mMaterialSearchView = view.findViewById(R.id.fragment_search);
-        mMaterialSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+
+        searchView = view.findViewById(R.id.fragment_searcht);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -109,15 +112,6 @@ public class RestaurantListFragment extends BaseFragment {
             }
         });
     }
-
-    /*@Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (getActivity() != null)
-        getActivity().getMenuInflater().inflate(R.menu.actionbar_menu,menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        mMaterialSearchView.setMenuItem(item);
-        super.onCreateOptionsMenu(menu, inflater);
-    }*/
 
     //------
     // DATA

@@ -30,4 +30,5 @@
     <string name="setting_explanation">You will receive a notification each day at noon about where you want lunch this day</string>
     <string name="actionbar_search">Search</string>
     <string name="toolbar_map_title">Map View</string>
+    <string name="toolbar_list_title">List View</string>
 </resources>
