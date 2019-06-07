@@ -66,40 +66,9 @@ public class DetailRestaurantAdapter extends RecyclerView.Adapter<DetailRestaura
         }
 
         private void display(Colleague pColleague){
-            new userImageTask(mImageView).execute(pColleague.getPicture());
+            new userImageDownloader(mImageView).execute(pColleague.getPicture());
             mText.setText(new StringBuilder(pColleague.getName() + " is joining"));
             mProgressBar.setVisibility(View.GONE);
-        }
-    }
-
-    /**
-     * task to download the user image
-     */
-    static class userImageTask extends AsyncTask<String,Void, Drawable>{
-
-        final WeakReference<ImageView> mImageReference;
-
-        private userImageTask(ImageView pImage){
-            mImageReference = new WeakReference<>(pImage);
-        }
-
-        @Override
-        protected void onPostExecute(Drawable drawable) {
-            mImageReference.get().setImageDrawable(drawable);
-            super.onPostExecute(drawable);
-        }
-
-        @Override
-        protected Drawable doInBackground(String... strings) {
-            Drawable retour = null;
-            try {
-                InputStream is = (InputStream) new URL(strings[0]).getContent();
-                retour = Drawable.createFromStream(is,"src name");
-            }catch (Exception e){
-                Log.e("User Image Error",e.getMessage());
-            }
-
-            return retour;
         }
     }
 }

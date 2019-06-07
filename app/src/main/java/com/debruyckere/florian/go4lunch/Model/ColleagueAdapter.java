@@ -75,7 +75,7 @@ public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.Coll
 
             new FireBaseConnector().GetWishOfColleague(RestaurantListener(),param.getId());
 
-            new ColleagueImageTask(mImageView).execute(param.getPicture());
+            new userImageDownloader(mImageView).execute(param.getPicture());
         }
 
         //------------------------
@@ -114,36 +114,5 @@ public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.Coll
             };
         }
 
-    }
-
-    /**
-     * Task to download the user image
-     */
-    static class ColleagueImageTask extends AsyncTask<String,Void, Drawable>{
-
-        //ImageView mImageView;
-        private final WeakReference<ImageView> mImageView;
-
-        private ColleagueImageTask(ImageView pImageView){
-            mImageView = new WeakReference<>(pImageView);
-        }
-        @Override
-        protected void onPostExecute(Drawable drawable) {
-            mImageView.get().setImageDrawable(drawable);
-            super.onPostExecute(drawable);
-        }
-
-        @Override
-        protected Drawable doInBackground(String... strings) {
-            Drawable retour = null;
-            try {
-                InputStream is = (InputStream) new URL(strings[0]).getContent();
-                retour = Drawable.createFromStream(is,"src name");
-            }catch (Exception e){
-            Log.e("Colleague Image Error",e.getMessage());
-        }
-
-            return retour;
-        }
     }
 }
