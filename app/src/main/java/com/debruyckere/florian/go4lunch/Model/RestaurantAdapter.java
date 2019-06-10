@@ -163,7 +163,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
 
                             }
                         }
-                        mColleague.setText(new StringBuilder(nbWish+ " Wish"));
+                        mColleague.setText(new StringBuilder(nbWish+ mContext.getResources().getString(R.string.restaurant_wish)));
 
                     }else{
                         if(task.getException() != null)

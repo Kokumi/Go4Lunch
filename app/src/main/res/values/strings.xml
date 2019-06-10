@@ -31,4 +31,7 @@
     <string name="actionbar_search">Search</string>
     <string name="toolbar_map_title">Map View</string>
     <string name="toolbar_list_title">List View</string>
+    <string name="colleague_nowhere"> go nowhere for now</string>
+    <string name="colleague_somewhere">want go to</string>
+    <string name="restaurant_wish">Wish</string>
 </resources>

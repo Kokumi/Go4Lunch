@@ -101,7 +101,9 @@ public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.Coll
                                     public void onComplete(@NonNull Task<FetchPlaceResponse> task) {
                                         if(task.getResult() != null){
                                             //retrieve the restaurant where he go
-                                            mTextView.setText(new StringBuilder(mTextView.getText()+ " want go to " + task.getResult().getPlace().getName()));
+                                            mTextView.setText(new StringBuilder(mTextView.getText()+
+                                                    mContext.getResources().getString(R.string.colleague_somewhere) +
+                                                    task.getResult().getPlace().getName()));
                                         }
                                     }
                                 },mContext,document.get("RestaurantId").toString());
@@ -109,7 +111,7 @@ public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.Coll
                             }
                         }
                     }
-                    if(!hadChoice) mTextView.setText(new StringBuilder(mTextView.getText()+" go nowhere for now"));
+                    if(!hadChoice) mTextView.setText(new StringBuilder(mTextView.getText()+ mContext.getResources().getString(R.string.colleague_nowhere)));
                 }
             };
         }

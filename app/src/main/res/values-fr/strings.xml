@@ -28,4 +28,7 @@
     <string name="setting_notification_text">Notification</string>
     <string name="toolbar_map_title">Carte</string>
     <string name="toolbar_list_title">Liste</string>
+    <string name="colleague_nowhere">" va null part actuellement"</string>
+    <string name="colleague_somewhere">veut aller à</string>
+    <string name="restaurant_wish">Voeux</string>
 </resources>

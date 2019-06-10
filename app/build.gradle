@@ -45,10 +45,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-base:16.1.0'
     implementation 'com.google.android.libraries.places:places:1.1.0'
     implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
-    //implementation 'com.google.android.libraries.places:places-compat:1.0.0'
-    //implementation 'com.google.android.gms:play-services-places:16.0.0'
 
-    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
+
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife:8.8.1'
 
