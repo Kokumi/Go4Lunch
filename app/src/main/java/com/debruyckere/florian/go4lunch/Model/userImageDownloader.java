@@ -10,10 +10,6 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 
 /**
- * Created by Debruyckère Florian on 07/06/2019.
- */
-
-/**
  * Task to download the user image
  */
 public class userImageDownloader extends AsyncTask<String,Void, Drawable> {

@@ -1,11 +1,8 @@
 package com.debruyckere.florian.go4lunch.Model;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +16,6 @@ import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.InputStream;
-import java.lang.ref.WeakReference;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -78,9 +72,9 @@ public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.Coll
             new userImageDownloader(mImageView).execute(param.getPicture());
         }
 
-        //------------------------
-        // LISTENER AND ASYNC TASK
-        //------------------------
+        //----------
+        // LISTENER
+        //----------
 
         /**
          * get the listener to check if the user go somewhere
@@ -111,7 +105,7 @@ public class ColleagueAdapter extends RecyclerView.Adapter<ColleagueAdapter.Coll
                             }
                         }
                     }
-                    if(!hadChoice) mTextView.setText(new StringBuilder(mTextView.getText()+ mContext.getResources().getString(R.string.colleague_nowhere)));
+                    if(!hadChoice) mTextView.setText(new StringBuilder(mTextView.getText()+ " " + mContext.getResources().getString(R.string.colleague_nowhere)));
                 }
             };
         }
