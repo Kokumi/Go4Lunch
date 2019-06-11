@@ -135,21 +135,21 @@ public class appActivity extends AppCompatActivity implements NavigationView.OnN
                                     public void onComplete(@NonNull Task<FetchPlaceResponse> task) {
                                         if(task.getResult() != null){
                                             Toast.makeText(getApplicationContext(),
-                                                    "you want go to "+task.getResult().getPlace().getName(),
+                                                    getResources().getString(R.string.app_somewhere)+" "+task.getResult().getPlace().getName(),
                                                     Toast.LENGTH_LONG)
                                             .show();
                                         }else {
-                                            Toast.makeText(getApplicationContext(),"You go nowhere today",Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.app_nowhere),Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 },getApplicationContext(),document.get("restaurantId").toString());
 
                             }else {
-                                Toast.makeText(getApplicationContext(),"You go nowhere today",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),getResources().getString(R.string.app_nowhere),Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
-                    Toast.makeText(getApplicationContext(),"You go nowhere today",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.app_nowhere),Toast.LENGTH_SHORT).show();
                 }
             },FirebaseAuth.getInstance().getCurrentUser().getUid());
                 break;

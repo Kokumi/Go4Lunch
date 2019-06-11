@@ -43,8 +43,8 @@ public class AlarmReceiver extends BroadcastReceiver {
      */
     private NotificationCompat.Builder notificationBuilder(String pName){
         return new NotificationCompat.Builder(mContext,CHANNEL_ID)
-                .setContentTitle("Your lunch")
-                .setContentText("today you choose to go: "+ pName)
+                .setContentTitle(mContext.getResources().getString(R.string.alarm_title))
+                .setContentText(mContext.getResources().getString(R.string.alarm_body)+" "+ pName)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
     }
@@ -73,7 +73,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                                         mGoSomewhere = true;
 
                                     }else {
-                                        nMC.notify(0,notificationBuilder("unknown place").build());
+                                        nMC.notify(0,notificationBuilder(mContext.getResources().getString(R.string.alarm_unknow)).build());
                                         mGoSomewhere = true;
                                     }
                                 }
@@ -87,6 +87,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         //check if the user have a wish
         if(!mGoSomewhere)
-            nMC.notify(0,notificationBuilder("nowhere").build());
+            nMC.notify(0,notificationBuilder(mContext.getResources().getString(R.string.alarm_nowhere)).build());
     }
 }

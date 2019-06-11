@@ -31,4 +31,10 @@
     <string name="colleague_nowhere">" va null part actuellement"</string>
     <string name="colleague_somewhere">veut aller à</string>
     <string name="restaurant_wish">Voeux</string>
+    <string name="app_nowhere">vous n\'allez null part aujourd\'hui</string>
+    <string name="app_somewhere">vous voulez aller à</string>
+    <string name="alarm_title">votre déjeuner</string>
+    <string name="alarm_body">"Aujourd'hui vous avez choisit de manger à: "</string>
+    <string name="alarm_unknow">dans l\'inconue</string>
+    <string name="alarm_nowhere">null part</string>
 </resources>

@@ -34,4 +34,10 @@
     <string name="colleague_nowhere"> go nowhere for now</string>
     <string name="colleague_somewhere">want go to</string>
     <string name="restaurant_wish">Wish</string>
+    <string name="app_nowhere">You go nowhere today</string>
+    <string name="app_somewhere">you want go to</string>
+    <string name="alarm_title">Your lunch</string>
+    <string name="alarm_body">"Today you choose to go: "</string>
+    <string name="alarm_unknow">unknown place</string>
+    <string name="alarm_nowhere">nowhere</string>
 </resources>

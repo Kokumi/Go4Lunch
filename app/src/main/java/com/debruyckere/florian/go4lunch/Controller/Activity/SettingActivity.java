@@ -30,8 +30,6 @@ public class SettingActivity extends AppCompatActivity {
         mSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: configure notification
-
                 getSharedPreferences("notificationSet",MODE_PRIVATE).edit()
                         .putBoolean("notification",mSwitch.isChecked())
                         .apply();
