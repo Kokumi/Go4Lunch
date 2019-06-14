@@ -55,7 +55,7 @@
         android:layout_height="75dp"
         android:layout_below="@+id/detail_second_layout"
         android:src="@drawable/fui_ic_phone_white_24dp"
-        android:scaleType="centerInside"
+        android:scaleType="fitCenter"
         android:contentDescription="@string/detail_description_call"/>
 
     <ImageButton
@@ -65,7 +65,7 @@
         android:layout_below="@id/detail_second_layout"
         android:layout_toEndOf="@+id/detail_call"
         android:src="@drawable/ic_heart_empty"
-        android:scaleType="centerCrop"
+        android:scaleType="centerInside"
         android:contentDescription="@string/detail_description_like"/>
 
     <ImageButton

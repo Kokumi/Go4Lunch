@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:layout_toStartOf="@+id/restaurant_cell_distance"
-        android:text="@string/restaurant_cell_name"/>
+        android:text="@string/restaurant_cell_name"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/restaurant_cell_address"
@@ -29,7 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_alignTop="@id/restaurant_cell_star1"
-        android:text="@string/restaurant_cell_open"/>
+        android:text="@string/restaurant_cell_open"
+        android:textStyle="italic"/>
 
     <TextView
         android:id="@+id/restaurant_cell_distance"
@@ -37,7 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_toStartOf="@id/restaurant_cell_image"
         android:layout_marginTop="5dp"
-        android:text="@string/restaurant_cell_distance"/>
+        android:text="@string/restaurant_cell_distance"
+        android:textColor="#969696"/>
 
     <TextView
         android:id="@+id/restaurant_cell_colleague"
@@ -53,6 +56,7 @@
         android:layout_height="60dp"
         android:layout_alignParentEnd="true"
         android:src="@android:drawable/ic_menu_edit"
+        android:scaleType="centerCrop"
         android:contentDescription="@string/restaurant_cell_description_image"/>
 
     <ImageView
